@@ -109,7 +109,7 @@ def guarded(name: str, fn, *args, **kwargs):
 def yahoo_chart(symbol: str, rng: str = "max") -> pd.DataFrame:
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{requests.utils.quote(symbol)}"
     r = http_get(url, params={"range": rng, "interval": "1d", "events": "div,split",
-                              "includeAdjustedClose": "true"})
+                              "includeAdjustedClose": "true"}, retries=1)
     js = r.json()
     res = js["chart"]["result"][0]
     ts = res.get("timestamp") or []
@@ -149,25 +149,95 @@ def stooq_daily(symbol: str) -> pd.DataFrame:
     return df[["date", "open", "high", "low", "close", "adj_close", "volume"]]
 
 
-def fetch_price(symbol: str) -> None:
+YAHOO_RAW_FAILURES = 0          # circuit breaker for the raw query1 endpoints (they 429 cloud runners)
+YAHOO_RAW_LIMIT = 4
+
+
+def yahoo_raw_available() -> bool:
+    return YAHOO_RAW_FAILURES < YAHOO_RAW_LIMIT
+
+
+def note_yahoo_raw(ok: bool) -> None:
+    global YAHOO_RAW_FAILURES
+    YAHOO_RAW_FAILURES = 0 if ok else YAHOO_RAW_FAILURES + 1
+
+
+def yf_bulk(symbols: list[str], period: str = "max", chunk: int = 80) -> dict[str, pd.DataFrame]:
+    """Download daily bars for many symbols with yfinance (browser impersonation, shared session).
+    Returns {symbol: DataFrame(date, open, high, low, close, adj_close, volume)}; symbols that fail are left out."""
+    try:
+        import yfinance as yf  # noqa: WPS433
+    except ImportError:
+        log("yfinance not installed; skipping bulk download")
+        return {}
+    out: dict[str, pd.DataFrame] = {}
+    for i in range(0, len(symbols), chunk):
+        batch = symbols[i:i + chunk]
+        try:
+            df = yf.download(batch, period=period, interval="1d", auto_adjust=False, actions=False,
+                             group_by="ticker", threads=True, progress=False, timeout=30)
+        except Exception as e:  # noqa: BLE001
+            log(f"yfinance batch {i // chunk + 1}: {type(e).__name__}: {e}")
+            time.sleep(3)
+            continue
+        if df is None or df.empty:
+            time.sleep(2)
+            continue
+        multi = isinstance(df.columns, pd.MultiIndex)
+        for sym in batch:
+            try:
+                sub = df[sym] if multi else df
+            except KeyError:
+                continue
+            if "Close" not in sub.columns:
+                continue
+            sub = sub.dropna(subset=["Close"])
+            if sub.empty:
+                continue
+            idx = pd.to_datetime(sub.index)
+            try:
+                idx = idx.tz_localize(None)
+            except (TypeError, AttributeError):
+                pass
+            rows = pd.DataFrame({"date": idx.strftime("%Y-%m-%d"), "open": sub["Open"].values, "high": sub["High"].values,
+                                 "low": sub["Low"].values, "close": sub["Close"].values,
+                                 "adj_close": sub["Adj Close"].values if "Adj Close" in sub.columns else sub["Close"].values,
+                                 "volume": sub["Volume"].values if "Volume" in sub.columns else None})
+            rows = rows.drop_duplicates("date", keep="last")
+            out[sym] = rows
+        time.sleep(1.0)
+    return out
+
+
+def fetch_price(symbol: str, bulk: pd.DataFrame | None = None) -> None:
     name = f"prices/{symbol}"
     path = RAW / "prices" / f"{symbol.replace('^', '_')}.csv"
     df, src, err = None, None, None
-    for label, fn in (("yahoo", yahoo_chart), ("stooq", stooq_daily)):
-        try:
-            df = fn(symbol)
-            src = label
-            break
-        except Exception as e:  # noqa: BLE001
-            err = f"{label}: {type(e).__name__}: {e}"
-            time.sleep(1.0)
+    if bulk is not None and len(bulk):
+        df, src = bulk, "yfinance"
+    else:
+        chain = []
+        if yahoo_raw_available():
+            chain.append(("yahoo", yahoo_chart))
+        chain.append(("stooq", stooq_daily))
+        for label, fn in chain:
+            try:
+                df = fn(symbol)
+                src = label
+                if label == "yahoo":
+                    note_yahoo_raw(True)
+                break
+            except Exception as e:  # noqa: BLE001
+                err = f"{label}: {type(e).__name__}: {e}"
+                if label == "yahoo":
+                    note_yahoo_raw(False)
+                time.sleep(1.0)
     if df is None:
         record(name, "kept_previous" if path.exists() else "failed", error=err)
         return
     df = merge_by_date(df, path)
     write_csv(df, path)
     record(name, "ok", source=src, rows=len(df), last_date=str(df["date"].iloc[-1]))
-    time.sleep(0.4)
 
 
 # ----------------------------------------------------------------------------- FRED
@@ -226,7 +296,7 @@ def wiki_tickers(url: str, col_candidates=("Symbol", "Ticker")) -> list[str]:
 
 def yahoo_spark(symbols: list[str], rng: str = "2y") -> dict[str, pd.Series]:
     url = "https://query1.finance.yahoo.com/v8/finance/spark"
-    r = http_get(url, params={"symbols": ",".join(symbols), "range": rng, "interval": "1d"})
+    r = http_get(url, params={"symbols": ",".join(symbols), "range": rng, "interval": "1d"}, retries=1)
     js = r.json()
     out: dict[str, pd.Series] = {}
     for item in js.get("spark", {}).get("result", []):
@@ -252,21 +322,25 @@ def fetch_breadth(label: str, url: str, col_candidates) -> None:
         syms = wiki_tickers(url, col_candidates)
         write_csv(pd.DataFrame({"symbol": syms}), cons_path)
         series: dict[str, pd.Series] = {}
-        failed: list[str] = []
-        for i in range(0, len(syms), 40):
-            batch = syms[i:i + 40]
-            try:
-                series.update(yahoo_spark(batch))
-            except Exception:  # noqa: BLE001
-                failed.extend(batch)
-            time.sleep(0.6)
-        for sym in failed:  # one more try, individually
-            try:
-                df = yahoo_chart(sym, rng="2y")
-                series[sym] = pd.Series(df["close"].values, index=df["date"].values, dtype="float64")
-            except Exception:  # noqa: BLE001
-                pass
-            time.sleep(0.3)
+        bulk = yf_bulk(syms, period="2y")
+        for sym, df in bulk.items():
+            s = pd.Series(df["close"].values, index=df["date"].values, dtype="float64").dropna()
+            if len(s):
+                series[sym] = s
+        missing = [s for s in syms if s not in series]
+        if missing and len(missing) <= 200 and yahoo_raw_available():
+            for i in range(0, len(missing), 40):
+                batch = missing[i:i + 40]
+                try:
+                    series.update(yahoo_spark(batch))
+                    note_yahoo_raw(True)
+                except Exception:  # noqa: BLE001
+                    note_yahoo_raw(False)
+                    if not yahoo_raw_available():
+                        break
+                time.sleep(0.6)
+        if len(series) < len(syms) * 0.6:
+            raise RuntimeError(f"only {len(series)} of {len(syms)} constituents downloaded")
         wide = pd.DataFrame(series)
         wide.index.name = "date"
         wide = wide.sort_index().reset_index()
@@ -579,8 +653,10 @@ def main(argv: list[str]) -> int:
     tickers = list(dict.fromkeys(CONFIG["core_tickers"] + list(CONFIG["sector_etfs"]) + CONFIG["ratio_tickers"]
                                  + CONFIG.get("yahoo_indices", [])))
     if not only or "prices" in only:
+        bulk = guarded("prices/bulk", yf_bulk, tickers, "max") or {}
+        log(f"yfinance bulk: {len(bulk)}/{len(tickers)} tickers")
         for t in tickers:
-            guarded(f"prices/{t}", fetch_price, t)
+            guarded(f"prices/{t}", fetch_price, t, bulk.get(t))
     if not only or "fred" in only:
         for s in CONFIG["fred_series"]:
             guarded(f"fred/{s}", fetch_fred, s)
