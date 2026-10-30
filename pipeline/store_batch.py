@@ -8,8 +8,9 @@ assets.json maps file names to the asset urls returned by the uploads, e.g.
     {"summary.json": "/_blob/0123...", "history.json": "/_blob/abcd...", ...}
 
 --store is the directory an `ArtifactData list` (collection "datasets", out_dir=...) saved the current documents to
-(store_dir/datasets/<id>.json); when given, each write is an "update" pinned to that document's version, otherwise a
-full "set" that creates the document.
+(store_dir/datasets/<id>.json). The saved files do not carry versions: copy the "version N" shown per document in the
+list output into a JSON file {"summary": 2, ...} and pass it as --versions. Each existing document then gets an "update"
+pinned to its version; a document with no saved file gets a full "set".
 
 Writes <out>/<id>.json (one document payload each) and <out>/batch_writes.json: the `writes` array for an
 `ArtifactData batch` call, with file_path pointing at those payload files.
@@ -28,9 +29,13 @@ def main():
     ap.add_argument("--assets", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--store", default=None)
+    ap.add_argument("--versions", default=None, help="JSON file {doc_id: version} copied from the ArtifactData list output")
     ap.add_argument("--by", default="Claude (scheduled run)")
     args = ap.parse_args()
     assets = json.loads(Path(args.assets).read_text())
+    versions = {}
+    if args.versions and Path(args.versions).exists():
+        versions = {k: int(v) for k, v in json.loads(Path(args.versions).read_text()).items()}
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -58,14 +63,10 @@ def main():
         (out / fname).write_text(json.dumps(payload, indent=1))
         entry = {"op": op, "collection": "datasets", "doc_id": ds_id, "file_path": str((out / fname).resolve())}
         if existing is not None:
-            ver = existing.get("version") or (existing.get("_meta") or {}).get("version")
+            ver = versions.get(ds_id) or existing.get("version")
             if ver is None:
-                # a saved document may wrap the content; look one level down
-                for v in existing.values():
-                    if isinstance(v, dict) and "version" in v:
-                        ver = v["version"]
-                        break
-            if ver is not None:
+                print(f"warning: no version known for {ds_id}; the batch will be refused for it until --versions supplies one")
+            else:
                 entry["if_version"] = int(ver)
         writes.append(entry)
     (out / "batch_writes.json").write_text(json.dumps(writes, indent=1))
