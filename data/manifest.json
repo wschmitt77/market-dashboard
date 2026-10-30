@@ -1,497 +1,523 @@
 {
- "run_at": "2026-10-30T13:51:21+00:00",
+ "run_at": "2026-10-30T14:27:24+00:00",
  "sources": {
   "prices/QQQ": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:28+00:00",
    "source": "yfinance",
-   "rows": 6955,
-   "last_date": "2026-10-30"
+   "rows": 6954,
+   "last_date": "2026-10-29"
   },
   "prices/IVV": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:28+00:00",
    "source": "yfinance",
-   "rows": 6652,
-   "last_date": "2026-10-30"
+   "rows": 6651,
+   "last_date": "2026-10-29"
   },
   "prices/TQQQ": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:28+00:00",
    "source": "yfinance",
-   "rows": 4206,
-   "last_date": "2026-10-30"
+   "rows": 4205,
+   "last_date": "2026-10-29"
   },
   "prices/SPY": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:28+00:00",
    "source": "yfinance",
-   "rows": 8497,
-   "last_date": "2026-10-30"
+   "rows": 8496,
+   "last_date": "2026-10-29"
   },
   "prices/XLK": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:28+00:00",
    "source": "yfinance",
-   "rows": 7007,
-   "last_date": "2026-10-30"
+   "rows": 7006,
+   "last_date": "2026-10-29"
   },
   "prices/XLY": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:28+00:00",
    "source": "yfinance",
-   "rows": 7007,
-   "last_date": "2026-10-30"
+   "rows": 7006,
+   "last_date": "2026-10-29"
   },
   "prices/XLC": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 2104,
-   "last_date": "2026-10-30"
+   "rows": 2103,
+   "last_date": "2026-10-29"
   },
   "prices/XLF": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 7007,
-   "last_date": "2026-10-30"
+   "rows": 7006,
+   "last_date": "2026-10-29"
   },
   "prices/XLV": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 7007,
-   "last_date": "2026-10-30"
+   "rows": 7006,
+   "last_date": "2026-10-29"
   },
   "prices/XLI": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 7007,
-   "last_date": "2026-10-30"
+   "rows": 7006,
+   "last_date": "2026-10-29"
   },
   "prices/XLE": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:26+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 7007,
-   "last_date": "2026-10-30"
+   "rows": 7006,
+   "last_date": "2026-10-29"
   },
   "prices/XLP": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 7007,
-   "last_date": "2026-10-30"
+   "rows": 7006,
+   "last_date": "2026-10-29"
   },
   "prices/XLU": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 7007,
-   "last_date": "2026-10-30"
+   "rows": 7006,
+   "last_date": "2026-10-29"
   },
   "prices/XLRE": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 2782,
-   "last_date": "2026-10-30"
+   "rows": 2781,
+   "last_date": "2026-10-29"
   },
   "prices/XLB": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 7007,
-   "last_date": "2026-10-30"
+   "rows": 7006,
+   "last_date": "2026-10-29"
   },
   "prices/RSP": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 5914,
-   "last_date": "2026-10-30"
+   "rows": 5913,
+   "last_date": "2026-10-29"
   },
   "prices/QQQE": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 3675,
-   "last_date": "2026-10-30"
+   "rows": 3674,
+   "last_date": "2026-10-29"
   },
   "prices/SPHB": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 3896,
-   "last_date": "2026-10-30"
+   "rows": 3895,
+   "last_date": "2026-10-29"
   },
   "prices/SPLV": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 3896,
-   "last_date": "2026-10-30"
+   "rows": 3895,
+   "last_date": "2026-10-29"
   },
   "prices/SMH": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 6642,
-   "last_date": "2026-10-30"
+   "rows": 6641,
+   "last_date": "2026-10-29"
   },
   "prices/IWM": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 6647,
-   "last_date": "2026-10-30"
+   "rows": 6646,
+   "last_date": "2026-10-29"
   },
   "prices/HYG": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 4922,
-   "last_date": "2026-10-30"
+   "rows": 4921,
+   "last_date": "2026-10-29"
   },
   "prices/IEF": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 6104,
-   "last_date": "2026-10-30"
+   "rows": 6103,
+   "last_date": "2026-10-29"
   },
   "prices/UUP": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 4950,
-   "last_date": "2026-10-30"
+   "rows": 4949,
+   "last_date": "2026-10-29"
   },
   "prices/TLT": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:29+00:00",
    "source": "yfinance",
-   "rows": 6104,
-   "last_date": "2026-10-30"
+   "rows": 6103,
+   "last_date": "2026-10-29"
   },
   "prices/GLD": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:30+00:00",
    "source": "yfinance",
-   "rows": 5522,
-   "last_date": "2026-10-30"
+   "rows": 5521,
+   "last_date": "2026-10-29"
   },
   "prices/^VIX": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:30+00:00",
    "source": "yfinance",
-   "rows": 9278,
-   "last_date": "2026-10-30"
+   "rows": 9277,
+   "last_date": "2026-10-29"
   },
   "prices/^VXN": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:30+00:00",
    "source": "yfinance",
-   "rows": 6482,
-   "last_date": "2026-10-30"
+   "rows": 6481,
+   "last_date": "2026-10-29"
   },
   "prices/^NDX": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:30+00:00",
    "source": "yfinance",
-   "rows": 10351,
-   "last_date": "2026-10-30"
+   "rows": 10350,
+   "last_date": "2026-10-29"
   },
   "prices/^GSPC": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:30+00:00",
    "source": "yfinance",
-   "rows": 24826,
-   "last_date": "2026-10-30"
+   "rows": 24825,
+   "last_date": "2026-10-29"
   },
   "prices/^MOVE": {
    "status": "ok",
-   "fetched_at": "2026-10-30T13:51:27+00:00",
+   "fetched_at": "2026-10-30T14:27:30+00:00",
    "source": "yfinance",
-   "rows": 5927,
-   "last_date": "2026-10-30"
+   "rows": 5926,
+   "last_date": "2026-10-29"
   },
   "fred/DGS10": {
-   "status": "timeout",
-   "fetched_at": "2026-10-30T13:52:12+00:00",
-   "error": "gave up after 45s (source hanging or rate-limited)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:41+00:00",
+   "source": "Yahoo ^TNX (10y yield)",
+   "rows": 1254,
+   "last_date": "2026-10-29"
   },
   "fred/DGS2": {
    "status": "failed",
-   "fetched_at": "2026-10-30T13:52:57+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:03+00:00",
+   "error": "fredgraph: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
   },
   "fred/DGS1": {
    "status": "failed",
-   "fetched_at": "2026-10-30T13:53:42+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "fredgraph: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
   },
   "fred/DGS6MO": {
    "status": "failed",
-   "fetched_at": "2026-10-30T13:54:27+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/DGS3MO": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T13:55:12+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:41+00:00",
+   "source": "Yahoo ^IRX (13-week bill)",
+   "rows": 1254,
+   "last_date": "2026-10-29"
   },
   "fred/DTB3": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T13:55:57+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:41+00:00",
+   "source": "Yahoo ^IRX (13-week bill)",
+   "rows": 1254,
+   "last_date": "2026-10-29"
   },
   "fred/DFII10": {
    "status": "failed",
-   "fetched_at": "2026-10-30T13:56:42+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/T10Y2Y": {
    "status": "failed",
-   "fetched_at": "2026-10-30T13:57:26+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/T10Y3M": {
    "status": "failed",
-   "fetched_at": "2026-10-30T13:58:11+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/T10YIE": {
    "status": "failed",
-   "fetched_at": "2026-10-30T13:58:56+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/T5YIFR": {
    "status": "failed",
-   "fetched_at": "2026-10-30T13:59:41+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/BAMLH0A0HYM2": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:00:26+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/BAMLC0A0CM": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:01:11+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/VIXCLS": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T14:01:56+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:41+00:00",
+   "source": "Yahoo ^VIX",
+   "rows": 1256,
+   "last_date": "2026-10-29"
   },
   "fred/DTWEXBGS": {
-   "status": "timeout",
-   "fetched_at": "2026-10-30T14:02:41+00:00",
-   "error": "gave up after 45s (source hanging or rate-limited)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:41+00:00",
+   "source": "Yahoo DXY (dollar index; proxy for the broad index)",
+   "rows": 1256,
+   "last_date": "2026-10-29"
   },
   "fred/DCOILWTICO": {
-   "status": "timeout",
-   "fetched_at": "2026-10-30T14:03:26+00:00",
-   "error": "gave up after 45s (source hanging or rate-limited)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:41+00:00",
+   "source": "Yahoo CL=F (WTI front month)",
+   "rows": 1256,
+   "last_date": "2026-10-29"
   },
   "fred/DFF": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T14:04:11+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:41+00:00",
+   "source": "Yahoo ZQ=F (30-day fed funds futures, 100 \u2212 price)",
+   "rows": 1257,
+   "last_date": "2026-10-29"
   },
   "fred/WALCL": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:04:56+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/WTREGEN": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:05:41+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/RRPONTSYD": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:06:26+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/NFCI": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T14:07:10+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:42+00:00",
+   "source": "Chicago Fed NFCI csv",
+   "rows": 2886,
+   "last_date": "2026-04-24"
   },
   "fred/ICSA": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:07:55+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/CCSA": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:08:40+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/UMCSENT": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:09:25+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/MICH": {
-   "status": "timeout",
-   "fetched_at": "2026-10-30T14:10:10+00:00",
-   "error": "gave up after 45s (source hanging or rate-limited)"
+   "status": "failed",
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/GASREGW": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:10:55+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/CPIAUCSL": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T14:11:40+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:42+00:00",
+   "source": "BLS public API CUSR0000SA0",
+   "rows": 32,
+   "last_date": "2026-09-01"
   },
   "fred/CPILFESL": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T14:12:25+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:43+00:00",
+   "source": "BLS public API CUSR0000SA0L1E",
+   "rows": 32,
+   "last_date": "2026-09-01"
   },
   "fred/PCEPILFE": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:13:10+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/UNRATE": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T14:13:55+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:44+00:00",
+   "source": "BLS public API LNS14000000",
+   "rows": 32,
+   "last_date": "2026-09-01"
   },
   "fred/PAYEMS": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T14:14:40+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:28:44+00:00",
+   "source": "BLS public API CES0000000001",
+   "rows": 33,
+   "last_date": "2026-09-01"
   },
   "fred/SP500": {
-   "status": "timeout",
-   "fetched_at": "2026-10-30T14:15:25+00:00",
-   "error": "gave up after 45s (source hanging or rate-limited)"
+   "status": "failed",
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/NASDAQ100": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:16:10+00:00",
-   "error": "ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)"
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
+  },
+  "fred/GDPNOW": {
+   "status": "failed",
+   "fetched_at": "2026-10-30T14:28:20+00:00",
+   "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "cboe/VIX": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:16:10+00:00",
+   "fetched_at": "2026-10-30T14:28:45+00:00",
    "rows": 9305,
    "last_date": "2026-10-29"
   },
   "cboe/VIX3M": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:16:10+00:00",
+   "fetched_at": "2026-10-30T14:28:45+00:00",
    "rows": 4305,
    "last_date": "2026-10-29"
   },
   "cboe/VIX9D": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:16:10+00:00",
+   "fetched_at": "2026-10-30T14:28:45+00:00",
    "rows": 3979,
    "last_date": "2026-10-29"
   },
   "cboe/VXN": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:16:10+00:00",
+   "fetched_at": "2026-10-30T14:28:46+00:00",
    "rows": 4311,
    "last_date": "2026-10-29"
   },
   "cboe/SKEW": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:16:10+00:00",
+   "fetched_at": "2026-10-30T14:28:46+00:00",
    "rows": 9259,
    "last_date": "2026-10-29"
   },
+  "misc/qqq_holdings": {
+   "status": "failed",
+   "fetched_at": "2026-10-30T14:28:46+00:00",
+   "error": "RuntimeError: weight/ticker columns not found: <!--"
+  },
   "breadth/spx": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:16:51+00:00",
+   "fetched_at": "2026-10-30T14:29:19+00:00",
    "symbols": 503,
    "with_data": 503,
-   "rows": 502,
-   "last_date": "2026-10-30"
+   "rows": 501,
+   "last_date": "2026-10-29"
   },
   "breadth/ndx": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:16:51+00:00",
-   "error": "RuntimeError: no constituents table found"
+   "fetched_at": "2026-10-30T14:29:19+00:00",
+   "error": "RuntimeError: holdings: qqq_holdings.csv not available; wikipedia: no constituents table found (18 tables)"
   },
   "misc/aaa_gas": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:16:52+00:00",
+   "fetched_at": "2026-10-30T14:29:19+00:00",
    "rows": 1,
    "regular": 4.2046
   },
   "misc/gdpnow": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:16:52+00:00",
-   "error": "RuntimeError: pattern 'Latest estimate: X percent \u2014 Month D, YYYY' not found"
+   "fetched_at": "2026-10-30T14:29:20+00:00",
+   "error": "RuntimeError: estimate not found; page text near 'Latest estimate':  GDPNow - Federal Reserve Bank of Atlanta /* Internal-FR - Source Code */ /** * @license Highcharts * * (c) 2009-2022 Torstein Honsi * * License: www.highcharts.com/license */ :root, .highcharts-light"
   },
   "misc/cleveland_nowcast": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:16:54+00:00",
+   "fetched_at": "2026-10-30T14:29:20+00:00",
    "rows": 12,
    "tables": 3
   },
   "misc/ism": {
    "status": "failed",
-   "fetched_at": "2026-10-30T14:16:59+00:00",
-   "error": "RuntimeError: HTTP 404 for https://www.ismworld.org/supply-management-news-and-reports/reports/ism-report-on-business/pmi/"
+   "fetched_at": "2026-10-30T14:29:31+00:00",
+   "error": "RuntimeError: no PMI number parsed from ISM pages"
   },
   "misc/cboe_putcall": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:17:00+00:00",
+   "fetched_at": "2026-10-30T14:29:36+00:00",
    "rows": 1,
    "equity_pc": 0.58
   },
-  "misc/qqq_holdings": {
-   "status": "failed",
-   "fetched_at": "2026-10-30T14:17:01+00:00",
-   "error": "ParserError: Error tokenizing data. C error: Expected 1 fields in line 11, saw 13\n"
-  },
   "misc/sp500_pe": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:17:01+00:00",
+   "fetched_at": "2026-10-30T14:29:36+00:00",
    "rows": 1871,
    "last_date": "2026-10-29",
    "last_value": 26.33
   },
   "misc/shiller_cape": {
    "status": "ok",
-   "fetched_at": "2026-10-30T14:17:01+00:00",
+   "fetched_at": "2026-10-30T14:29:37+00:00",
    "rows": 1870,
    "last_date": "2026-10-29",
    "last_value": 40.88
   },
   "misc/calendar": {
-   "status": "partial",
-   "fetched_at": "2026-10-30T14:17:12+00:00",
+   "status": "ok",
+   "fetched_at": "2026-10-30T14:29:42+00:00",
    "fomc": 56,
-   "cpi": 0,
-   "nfp": 0,
+   "cpi": 14,
+   "nfp": 14,
    "error": "cpi: RuntimeError: HTTP 403 for https://www.bls.gov/schedule/news_release/cpi.htm; nfp: RuntimeError: HTTP 403 for https://www.bls.gov/schedule/news_release/empsit.htm"
   }
  },
  "summary": {
-  "ok": 42,
-  "total": 80,
+  "ok": 55,
+  "total": 81,
   "failed": [
-   "fred/DGS10",
    "fred/DGS2",
    "fred/DGS1",
    "fred/DGS6MO",
-   "fred/DGS3MO",
-   "fred/DTB3",
    "fred/DFII10",
    "fred/T10Y2Y",
    "fred/T10Y3M",
@@ -499,30 +525,22 @@
    "fred/T5YIFR",
    "fred/BAMLH0A0HYM2",
    "fred/BAMLC0A0CM",
-   "fred/VIXCLS",
-   "fred/DTWEXBGS",
-   "fred/DCOILWTICO",
-   "fred/DFF",
    "fred/WALCL",
    "fred/WTREGEN",
    "fred/RRPONTSYD",
-   "fred/NFCI",
    "fred/ICSA",
    "fred/CCSA",
    "fred/UMCSENT",
    "fred/MICH",
    "fred/GASREGW",
-   "fred/CPIAUCSL",
-   "fred/CPILFESL",
    "fred/PCEPILFE",
-   "fred/UNRATE",
-   "fred/PAYEMS",
    "fred/SP500",
    "fred/NASDAQ100",
+   "fred/GDPNOW",
+   "misc/qqq_holdings",
    "breadth/ndx",
    "misc/gdpnow",
-   "misc/ism",
-   "misc/qqq_holdings"
+   "misc/ism"
   ]
  }
 }
