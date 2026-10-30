@@ -528,6 +528,19 @@ def nasdaq_api_tickers() -> list[str]:
     syms = [x for x in syms if re.fullmatch(r"[A-Z0-9\-]{1,6}", x)]
     if len(syms) < 90:
         raise RuntimeError(f"Nasdaq API returned {len(syms)} symbols")
+    # market caps, when the API carries them: an approximate weight table for the concentration metric
+    caps = []
+    for x in rows:
+        raw = str(x.get("marketCap", "") or "").replace("$", "").replace(",", "").strip()
+        try:
+            cap = float(raw)
+        except ValueError:
+            continue
+        sym = str(x.get("symbol", "")).strip().replace(".", "-").replace("/", "-")
+        if cap > 0 and re.fullmatch(r"[A-Z0-9\-]{1,6}", sym):
+            caps.append({"date": today_iso(), "ticker": sym, "name": str(x.get("companyName", ""))[:60], "market_cap": cap})
+    if len(caps) >= 90:
+        write_csv(pd.DataFrame(caps).sort_values("market_cap", ascending=False), RAW / "misc" / "ndx_marketcaps.csv")
     return list(dict.fromkeys(syms))
 
 

@@ -694,14 +694,25 @@ class Engine:
         hold = d.misc("qqq_holdings")
         top10 = None
         names = ""
+        top_src = "Invesco QQQ holdings file via the GitHub data feed"
+        approx = ""
         if hold is not None and "weight" in hold.columns:
             h = hold.reset_index().sort_values("weight", ascending=False)
             top10 = float(h["weight"].head(10).sum())
             names = ", ".join(str(x) for x in h["ticker"].head(5))
-        self.add(LK, L, "Top-10 holdings weight in QQQ", id="qqq_top10", value=top10, fmt=pct(top10, False), col1="top 10", col2="",
+        else:
+            caps = self.d._csv(self.d.raw / "misc" / "ndx_marketcaps.csv", dedupe=False)
+            if caps is not None and "market_cap" in caps.columns and len(caps) >= 90:
+                c = caps.reset_index().sort_values("market_cap", ascending=False)
+                top10 = float(c["market_cap"].head(10).sum() / c["market_cap"].sum() * 100)
+                names = ", ".join(str(x) for x in c["ticker"].head(5))
+                hold = caps
+                top_src = "Nasdaq-100 member market caps (Nasdaq API) via the GitHub data feed; approximates the fund's modified cap weights"
+                approx = " (approximate, from market caps)"
+        self.add(LK, L, "Top-10 holdings weight in QQQ", id="qqq_top10", value=top10, fmt=pct(top10, False) + approx, col1="top 10", col2="",
                  signal="concentrated" if top10 is not None and top10 > 50 else "normal", state="warn" if top10 is not None and top10 > 50 else "ok",
-                 reading=f"Ten names are {f(top10, '{:.0f}')}% of the fund ({names}, …): single-stock risk is index risk." if top10 is not None else "",
-                 threshold="> 50% = highly concentrated", as_of=last_date(hold) if hold is not None else None, source="Invesco QQQ holdings file via the GitHub data feed")
+                 reading=f"Ten names are about {f(top10, '{:.0f}')}% of the index ({names}, …): single-stock risk is index risk." if top10 is not None else "",
+                 threshold="> 50% = highly concentrated", as_of=last_date(hold) if hold is not None else None, source=top_src)
 
         # ---------------- E. sectors -----------------------------------------
         L, LK = "Relative pricing & rotation", "sectors"
