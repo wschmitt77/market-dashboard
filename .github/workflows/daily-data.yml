@@ -1,0 +1,53 @@
+name: Daily market data feed
+
+on:
+  schedule:
+    # 10:15 UTC = 5:15 AM Central (CDT) / 4:15 AM (CST), every day; the 6 AM dashboard job reads the result.
+    - cron: "15 10 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - "fetch/**"
+      - "config.json"
+      - ".github/workflows/daily-data.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-data
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r fetch/requirements.txt
+
+      - name: Fetch all sources
+        run: python fetch/fetch_data.py
+
+      - name: Commit data
+        run: |
+          git config user.name "market-data-bot"
+          git config user.email "market-data-bot@users.noreply.github.com"
+          git add -A data
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "data: $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+            git push
+          fi

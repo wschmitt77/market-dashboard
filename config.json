@@ -1,0 +1,153 @@
+{
+  "_about": "Configuration for the Market Signals Dashboard data feed and metric engine. Edit thresholds and sizing to taste; the pipeline reads this file on every run.",
+  "core_tickers": [
+    "QQQ",
+    "IVV",
+    "TQQQ",
+    "SPY"
+  ],
+  "sector_etfs": {
+    "XLK": "Technology",
+    "XLY": "Consumer Discretionary",
+    "XLC": "Communication Services",
+    "XLF": "Financials",
+    "XLV": "Health Care",
+    "XLI": "Industrials",
+    "XLE": "Energy",
+    "XLP": "Consumer Staples",
+    "XLU": "Utilities",
+    "XLRE": "Real Estate",
+    "XLB": "Materials"
+  },
+  "ratio_tickers": [
+    "RSP",
+    "QQQE",
+    "SPHB",
+    "SPLV",
+    "SMH",
+    "IWM",
+    "HYG",
+    "IEF",
+    "UUP",
+    "TLT",
+    "GLD"
+  ],
+  "yahoo_indices": [
+    "^VIX",
+    "^VXN",
+    "^NDX",
+    "^GSPC",
+    "^MOVE"
+  ],
+  "cboe_indices": [
+    "VIX",
+    "VIX3M",
+    "VIX9D",
+    "VXN",
+    "SKEW"
+  ],
+  "fred_series": {
+    "DGS10": "10-Year Treasury constant maturity yield",
+    "DGS2": "2-Year Treasury yield",
+    "DGS1": "1-Year Treasury yield",
+    "DGS6MO": "6-Month Treasury yield",
+    "DGS3MO": "3-Month Treasury yield",
+    "DTB3": "3-Month Treasury bill secondary market rate",
+    "DFII10": "10-Year TIPS real yield",
+    "T10Y2Y": "10y minus 2y Treasury spread",
+    "T10Y3M": "10y minus 3m Treasury spread",
+    "T10YIE": "10-year breakeven inflation",
+    "T5YIFR": "5-year, 5-year forward inflation expectation",
+    "BAMLH0A0HYM2": "ICE BofA US High Yield option-adjusted spread",
+    "BAMLC0A0CM": "ICE BofA US Corporate (IG) option-adjusted spread",
+    "VIXCLS": "CBOE VIX close (FRED copy)",
+    "DTWEXBGS": "Trade-weighted US dollar index, broad",
+    "DCOILWTICO": "WTI crude oil spot price",
+    "DFF": "Effective federal funds rate",
+    "WALCL": "Fed total assets (weekly)",
+    "WTREGEN": "Treasury General Account (weekly average)",
+    "RRPONTSYD": "Overnight reverse repo (daily)",
+    "NFCI": "Chicago Fed National Financial Conditions Index (weekly)",
+    "ICSA": "Initial jobless claims (weekly)",
+    "CCSA": "Continued claims (weekly)",
+    "UMCSENT": "Michigan consumer sentiment (monthly)",
+    "MICH": "Michigan 1-year inflation expectation (monthly)",
+    "GASREGW": "US regular gasoline price, weekly (EIA)",
+    "CPIAUCSL": "CPI all items (monthly, SA)",
+    "CPILFESL": "Core CPI (monthly, SA)",
+    "PCEPILFE": "Core PCE price index (monthly)",
+    "UNRATE": "Unemployment rate (monthly)",
+    "PAYEMS": "Nonfarm payrolls (monthly)",
+    "SP500": "S&P 500 index (FRED copy, 10 years)",
+    "NASDAQ100": "Nasdaq-100 index (FRED copy, 10 years)"
+  },
+  "breadth_history_days": 800,
+  "calendar_fallback": {
+    "fomc": [
+      "2026-10-28",
+      "2026-12-09"
+    ],
+    "cpi": [],
+    "nfp": []
+  },
+  "earnings_watch": {
+    "_about": "Next report dates for the mega-caps that drive QQQ. Edit by hand or ask Claude to update them; blank means unknown.",
+    "AAPL": "",
+    "MSFT": "",
+    "NVDA": "",
+    "AMZN": "",
+    "GOOGL": "",
+    "META": "",
+    "AVGO": "",
+    "TSLA": ""
+  },
+  "composites": {
+    "regime": {
+      "green_at": 1.5,
+      "red_at": -0.5,
+      "max_tqqq_allocation_pct": {
+        "green": 20,
+        "yellow": 10,
+        "red": 0
+      },
+      "_note": "max_tqqq_allocation_pct is an example sizing ladder, not advice. Change it to your own rules."
+    },
+    "dip": {
+      "add_tranche_at": [
+        55,
+        70,
+        85
+      ],
+      "_note": "Dip-buy score levels at which the dashboard suggests a TQQQ tranche (1st, 2nd, 3rd)."
+    },
+    "heat": {
+      "trim_tranche_at": [
+        60,
+        75,
+        90
+      ],
+      "_note": "Heat score levels at which the dashboard suggests trimming TQQQ (1st, 2nd, 3rd)."
+    }
+  },
+  "backtest": {
+    "horizons_days": [
+      5,
+      10,
+      20,
+      60
+    ],
+    "score_buckets": [
+      0,
+      20,
+      40,
+      60,
+      80,
+      100
+    ]
+  },
+  "insight_horizons_days": [
+    5,
+    10,
+    20
+  ]
+}
