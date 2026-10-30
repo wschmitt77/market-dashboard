@@ -24,6 +24,7 @@ import json
 import os
 import re
 import sys
+import threading
 import time
 import traceback
 from datetime import datetime, timezone, date
@@ -45,11 +46,32 @@ MANIFEST: dict = {"run_at": datetime.now(timezone.utc).isoformat(timespec="secon
 
 
 # ----------------------------------------------------------------------------- helpers
+LOG_PATH = ROOT / "data" / "fetch_log.txt"
+
+
 def log(msg: str) -> None:
-    print(f"[{datetime.now(timezone.utc).strftime('%H:%M:%S')}] {msg}", flush=True)
+    line = f"[{datetime.now(timezone.utc).strftime('%H:%M:%S')}] {msg}"
+    print(line, flush=True)
+    try:
+        LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with LOG_PATH.open("a") as fh:
+            fh.write(line + "\n")
+    except Exception:  # noqa: BLE001
+        pass
 
 
-def http_get(url: str, *, params=None, timeout=30, retries=3, sleep=1.5, headers=None) -> requests.Response:
+def save_manifest() -> None:
+    try:
+        ok = sum(1 for v in MANIFEST["sources"].values() if v["status"] == "ok")
+        MANIFEST["summary"] = {"ok": ok, "total": len(MANIFEST["sources"]),
+                               "failed": [k for k, v in MANIFEST["sources"].items() if v["status"] not in ("ok", "partial")]}
+        (ROOT / "data").mkdir(parents=True, exist_ok=True)
+        (ROOT / "data" / "manifest.json").write_text(json.dumps(MANIFEST, indent=1))
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def http_get(url: str, *, params=None, timeout=20, retries=2, sleep=1.5, headers=None) -> requests.Response:
     last = None
     for attempt in range(retries):
         try:
@@ -93,16 +115,33 @@ def record(name: str, status: str, **kw) -> None:
     log(f"{name}: {status} " + " ".join(f"{k}={v}" for k, v in kw.items() if v is not None and k != "error"))
     if "error" in kw and kw["error"]:
         log(f"   error: {str(kw['error'])[:300]}")
+    save_manifest()
 
 
-def guarded(name: str, fn, *args, **kwargs):
-    """Run a fetcher; on failure record the error and keep going."""
-    try:
-        return fn(*args, **kwargs)
-    except Exception as e:  # noqa: BLE001
-        record(name, "failed", error=f"{type(e).__name__}: {e}")
-        traceback.print_exc(limit=1)
+def guarded(name: str, fn, *args, budget: float | None = None, **kwargs):
+    """Run a fetcher in a daemon thread with a time budget; on failure or timeout record it and keep going."""
+    budget = budget or float(CONFIG.get("source_time_budget_s", 120))
+    box: dict = {}
+
+    def runner():
+        try:
+            box["result"] = fn(*args, **kwargs)
+        except Exception as e:  # noqa: BLE001
+            box["error"] = e
+
+    th = threading.Thread(target=runner, daemon=True, name=name)
+    t0 = time.time()
+    th.start()
+    th.join(budget)
+    if th.is_alive():
+        record(name, "timeout", error=f"gave up after {budget:.0f}s (source hanging or rate-limited)")
         return None
+    if "error" in box:
+        e = box["error"]
+        record(name, "failed", error=f"{type(e).__name__}: {e}")
+        return None
+    log(f"   ({name} took {time.time() - t0:.1f}s)")
+    return box.get("result")
 
 
 # ----------------------------------------------------------------------------- prices
@@ -652,37 +691,41 @@ def main(argv: list[str]) -> int:
 
     tickers = list(dict.fromkeys(CONFIG["core_tickers"] + list(CONFIG["sector_etfs"]) + CONFIG["ratio_tickers"]
                                  + CONFIG.get("yahoo_indices", [])))
+    try:
+        LOG_PATH.write_text("")
+    except Exception:  # noqa: BLE001
+        pass
+    log(f"fetch start; {len(tickers)} tickers, {len(CONFIG['fred_series'])} FRED series")
     if not only or "prices" in only:
-        bulk = guarded("prices/bulk", yf_bulk, tickers, "max") or {}
+        bulk = guarded("prices/bulk", yf_bulk, tickers, "max", budget=300) or {}
         log(f"yfinance bulk: {len(bulk)}/{len(tickers)} tickers")
         for t in tickers:
-            guarded(f"prices/{t}", fetch_price, t, bulk.get(t))
+            guarded(f"prices/{t}", fetch_price, t, bulk.get(t), budget=45)
     if not only or "fred" in only:
         for s in CONFIG["fred_series"]:
-            guarded(f"fred/{s}", fetch_fred, s)
+            guarded(f"fred/{s}", fetch_fred, s, budget=45)
     if not only or "cboe" in only:
         for idx in CONFIG["cboe_indices"]:
-            guarded(f"cboe/{idx}", fetch_cboe, idx)
+            guarded(f"cboe/{idx}", fetch_cboe, idx, budget=45)
     if not only or "breadth" in only:
-        guarded("breadth/spx", fetch_breadth, "spx", "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies", ("Symbol",))
-        guarded("breadth/ndx", fetch_breadth, "ndx", "https://en.wikipedia.org/wiki/Nasdaq-100", ("Ticker", "Symbol"))
+        guarded("breadth/spx", fetch_breadth, "spx", "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies", ("Symbol",), budget=420)
+        guarded("breadth/ndx", fetch_breadth, "ndx", "https://en.wikipedia.org/wiki/Nasdaq-100", ("Ticker", "Symbol"), budget=240)
     if not only or "misc" in only:
-        guarded("misc/aaa_gas", fetch_aaa_gas)
-        guarded("misc/gdpnow", fetch_gdpnow)
-        guarded("misc/cleveland_nowcast", fetch_cleveland_nowcast)
-        guarded("misc/ism", fetch_ism)
-        guarded("misc/cboe_putcall", fetch_cboe_putcall)
-        guarded("misc/qqq_holdings", fetch_qqq_holdings)
-        guarded("misc/sp500_pe", fetch_multpl, "s-p-500-pe-ratio", "sp500_pe")
-        guarded("misc/shiller_cape", fetch_multpl, "shiller-pe", "shiller_cape")
-        guarded("misc/calendar", fetch_calendar)
+        guarded("misc/aaa_gas", fetch_aaa_gas, budget=60)
+        guarded("misc/gdpnow", fetch_gdpnow, budget=60)
+        guarded("misc/cleveland_nowcast", fetch_cleveland_nowcast, budget=60)
+        guarded("misc/ism", fetch_ism, budget=90)
+        guarded("misc/cboe_putcall", fetch_cboe_putcall, budget=60)
+        guarded("misc/qqq_holdings", fetch_qqq_holdings, budget=60)
+        guarded("misc/sp500_pe", fetch_multpl, "s-p-500-pe-ratio", "sp500_pe", budget=60)
+        guarded("misc/shiller_cape", fetch_multpl, "shiller-pe", "shiller_cape", budget=60)
+        guarded("misc/calendar", fetch_calendar, budget=120)
 
-    ok = sum(1 for v in MANIFEST["sources"].values() if v["status"] == "ok")
-    MANIFEST["summary"] = {"ok": ok, "total": len(MANIFEST["sources"]),
-                           "failed": [k for k, v in MANIFEST["sources"].items() if v["status"] in ("failed", "kept_previous")]}
-    (ROOT / "data" / "manifest.json").write_text(json.dumps(MANIFEST, indent=1))
+    save_manifest()
+    ok = MANIFEST["summary"]["ok"]
     log(f"done: {ok}/{len(MANIFEST['sources'])} sources ok")
-    return 0
+    sys.stdout.flush()
+    os._exit(0)  # don't wait on abandoned (timed-out) network threads
 
 
 if __name__ == "__main__":

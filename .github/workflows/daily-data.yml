@@ -22,7 +22,7 @@ concurrency:
 jobs:
   fetch:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,9 +37,12 @@ jobs:
         run: pip install -r fetch/requirements.txt
 
       - name: Fetch all sources
+        timeout-minutes: 28
+        continue-on-error: true
         run: python fetch/fetch_data.py
 
       - name: Commit data
+        if: always()
         run: |
           git config user.name "market-data-bot"
           git config user.email "market-data-bot@users.noreply.github.com"
