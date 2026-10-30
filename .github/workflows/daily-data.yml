@@ -39,6 +39,8 @@ jobs:
       - name: Fetch all sources
         timeout-minutes: 28
         continue-on-error: true
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python fetch/fetch_data.py
 
       - name: Commit data

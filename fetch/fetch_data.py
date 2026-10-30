@@ -27,8 +27,9 @@ import sys
 import threading
 import time
 import traceback
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone, date, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import requests
@@ -43,6 +44,19 @@ HEADERS = {"User-Agent": UA, "Accept": "text/html,application/json,text/csv,*/*;
            "Accept-Language": "en-US,en;q=0.9"}
 
 MANIFEST: dict = {"run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sources": {}}
+ET = ZoneInfo("America/New_York")
+FRED_API_KEY = os.environ.get("FRED_API_KEY", "").strip()
+
+
+def drop_incomplete_today(df: pd.DataFrame) -> pd.DataFrame:
+    """Yahoo includes the in-progress session as a bar; drop a bar dated today when the US close hasn't happened."""
+    if df is None or df.empty or "date" not in df.columns:
+        return df
+    now_et = datetime.now(ET)
+    if now_et.hour < 16 or (now_et.hour == 16 and now_et.minute < 15):
+        today = now_et.strftime("%Y-%m-%d")
+        df = df[df["date"].astype(str) != today]
+    return df
 
 
 # ----------------------------------------------------------------------------- helpers
@@ -274,28 +288,187 @@ def fetch_price(symbol: str, bulk: pd.DataFrame | None = None) -> None:
     if df is None:
         record(name, "kept_previous" if path.exists() else "failed", error=err)
         return
+    df = drop_incomplete_today(df)
     df = merge_by_date(df, path)
+    # a previously saved partial bar for the same (still open) session is dropped too
+    df = drop_incomplete_today(df)
     write_csv(df, path)
     record(name, "ok", source=src, rows=len(df), last_date=str(df["date"].iloc[-1]))
 
 
 # ----------------------------------------------------------------------------- FRED
+FRED_FAILURES = 0
+
+
+def fred_api(series: str) -> pd.DataFrame:
+    r = http_get("https://api.stlouisfed.org/fred/series/observations",
+                 params={"series_id": series, "api_key": FRED_API_KEY, "file_type": "json",
+                         "observation_start": "1990-01-01"}, timeout=25, retries=2)
+    obs = r.json().get("observations", [])
+    df = pd.DataFrame([{"date": o["date"], "value": o["value"]} for o in obs])
+    if df.empty:
+        raise RuntimeError("FRED API returned no observations")
+    df["value"] = pd.to_numeric(df["value"], errors="coerce")
+    return df.dropna(subset=["value"])
+
+
+def fred_graph(series: str) -> pd.DataFrame:
+    r = http_get("https://fred.stlouisfed.org/graph/fredgraph.csv", params={"id": series}, timeout=15, retries=1)
+    df = pd.read_csv(io.StringIO(r.text))
+    dcol = "observation_date" if "observation_date" in df.columns else df.columns[0]
+    df = df.rename(columns={dcol: "date", series: "value"})
+    df["value"] = pd.to_numeric(df["value"], errors="coerce")
+    return df.dropna(subset=["value"])[["date", "value"]]
+
+
 def fetch_fred(series: str) -> None:
+    global FRED_FAILURES
     name = f"fred/{series}"
     path = RAW / "fred" / f"{series}.csv"
-    try:
-        r = http_get("https://fred.stlouisfed.org/graph/fredgraph.csv", params={"id": series})
-        df = pd.read_csv(io.StringIO(r.text))
-        dcol = "observation_date" if "observation_date" in df.columns else df.columns[0]
-        df = df.rename(columns={dcol: "date", series: "value"})
-        df["value"] = pd.to_numeric(df["value"], errors="coerce")
-        df = df.dropna(subset=["value"])[["date", "value"]]
-        df = merge_by_date(df, path)
-        write_csv(df, path)
-        record(name, "ok", rows=len(df), last_date=str(df["date"].iloc[-1]))
-    except Exception as e:  # noqa: BLE001
-        record(name, "kept_previous" if path.exists() else "failed", error=f"{type(e).__name__}: {e}")
-    time.sleep(0.3)
+    if FRED_FAILURES >= 3:
+        record(name, "kept_previous" if path.exists() else "failed", error="skipped: FRED unreachable from this runner (3 earlier timeouts)")
+        return
+    errs = []
+    df = None
+    if FRED_API_KEY:
+        try:
+            df = fred_api(series)
+        except Exception as e:  # noqa: BLE001
+            errs.append(f"api: {type(e).__name__}: {e}")
+    if df is None:
+        try:
+            df = fred_graph(series)
+        except Exception as e:  # noqa: BLE001
+            errs.append(f"fredgraph: {type(e).__name__}: {e}")
+    if df is None:
+        FRED_FAILURES += 1
+        record(name, "kept_previous" if path.exists() else "failed", error="; ".join(errs)[:300])
+        return
+    FRED_FAILURES = 0
+    df = merge_by_date(df, path)
+    write_csv(df, path)
+    record(name, "ok", source="fred_api" if FRED_API_KEY else "fredgraph", rows=len(df), last_date=str(df["date"].iloc[-1]))
+    time.sleep(0.2)
+
+
+# ----------------------------------------------------------------------------- fallbacks for FRED series
+def write_fallback_series(series: str, df: pd.DataFrame, source: str) -> None:
+    """Fill fred/<series>.csv from an alternative source when FRED itself failed."""
+    name = f"fred/{series}"
+    path = RAW / "fred" / f"{series}.csv"
+    if MANIFEST["sources"].get(name, {}).get("status") == "ok":
+        return
+    df = df.dropna(subset=["value"]).copy()
+    df["date"] = pd.to_datetime(df["date"]).dt.strftime("%Y-%m-%d")
+    df["value"] = pd.to_numeric(df["value"], errors="coerce").round(4)
+    df = drop_incomplete_today(df[["date", "value"]]).drop_duplicates("date", keep="last")
+    if df.empty:
+        return
+    df = merge_by_date(df, path)
+    write_csv(df, path)
+    record(name, "ok", source=source, rows=len(df), last_date=str(df["date"].iloc[-1]))
+
+
+def treasury_curve(kind: str, years: list[int]) -> pd.DataFrame:
+    frames = []
+    for y in years:
+        url = (f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/all/{y}"
+               f"?type={kind}&field_tdr_date_value={y}&page&_format=csv")
+        try:
+            r = http_get(url, timeout=25, retries=1)
+            t = pd.read_csv(io.StringIO(r.text))
+            if "Date" in t.columns and len(t):
+                frames.append(t)
+        except Exception as e:  # noqa: BLE001
+            log(f"treasury {kind} {y}: {type(e).__name__}: {e}")
+        time.sleep(0.5)
+    if not frames:
+        raise RuntimeError("no Treasury CSV downloaded")
+    df = pd.concat(frames, ignore_index=True)
+    dates = pd.to_datetime(df["Date"], errors="coerce").dt.strftime("%Y-%m-%d")
+    df = df.drop(columns=["Date"])
+    df.columns = [re.sub(r"[^a-z0-9]", "", str(c).lower()) for c in df.columns]
+    df.insert(0, "date", dates)
+    return df.dropna(subset=["date"]).drop_duplicates("date", keep="last").sort_values("date")
+
+
+def fetch_fred_fallbacks() -> None:
+    missing = {s for s in CONFIG["fred_series"] if MANIFEST["sources"].get(f"fred/{s}", {}).get("status") != "ok"}
+    if not missing:
+        return
+    this_year = date.today().year
+    years = [this_year - 3, this_year - 2, this_year - 1, this_year]
+    curve_targets = {"DGS3MO": "3mo", "DGS6MO": "6mo", "DGS1": "1yr", "DGS2": "2yr", "DGS10": "10yr", "DTB3": "3mo"}
+    if missing & (set(curve_targets) | {"T10Y2Y", "T10Y3M"}):
+        try:
+            cv = treasury_curve("daily_treasury_yield_curve", years)
+            for series, col in curve_targets.items():
+                if series in missing and col in cv.columns:
+                    write_fallback_series(series, cv.rename(columns={col: "value"})[["date", "value"]], "treasury.gov daily yield curve")
+            if "10yr" in cv.columns and "2yr" in cv.columns and "T10Y2Y" in missing:
+                write_fallback_series("T10Y2Y", pd.DataFrame({"date": cv["date"], "value": pd.to_numeric(cv["10yr"], errors="coerce") - pd.to_numeric(cv["2yr"], errors="coerce")}), "treasury.gov (10y − 2y)")
+            if "10yr" in cv.columns and "3mo" in cv.columns and "T10Y3M" in missing:
+                write_fallback_series("T10Y3M", pd.DataFrame({"date": cv["date"], "value": pd.to_numeric(cv["10yr"], errors="coerce") - pd.to_numeric(cv["3mo"], errors="coerce")}), "treasury.gov (10y − 3m)")
+        except Exception as e:  # noqa: BLE001
+            log(f"treasury yield curve fallback failed: {type(e).__name__}: {e}")
+    if "DFII10" in missing:
+        try:
+            rv = treasury_curve("daily_treasury_real_yield_curve", years)
+            if "10yr" in rv.columns:
+                write_fallback_series("DFII10", rv.rename(columns={"10yr": "value"})[["date", "value"]], "treasury.gov daily real yield curve")
+        except Exception as e:  # noqa: BLE001
+            log(f"treasury real yield fallback failed: {type(e).__name__}: {e}")
+    # Yahoo proxies for what is still missing
+    still = {s for s in missing if MANIFEST["sources"].get(f"fred/{s}", {}).get("status") != "ok"}
+    proxies = {"DGS10": ("^TNX", "Yahoo ^TNX (10y yield)", None), "DTB3": ("^IRX", "Yahoo ^IRX (13-week bill)", None),
+               "DGS3MO": ("^IRX", "Yahoo ^IRX (13-week bill)", None), "DCOILWTICO": ("CL=F", "Yahoo CL=F (WTI front month)", None),
+               "DTWEXBGS": ("DX-Y.NYB", "Yahoo DXY (dollar index; proxy for the broad index)", None),
+               "DFF": ("ZQ=F", "Yahoo ZQ=F (30-day fed funds futures, 100 − price)", lambda s: 100 - s),
+               "VIXCLS": ("^VIX", "Yahoo ^VIX", None)}
+    wanted = {s: proxies[s] for s in still if s in proxies}
+    if wanted:
+        bulk = yf_bulk(sorted({v[0] for v in wanted.values()}), period="5y")
+        for series, (sym, label, fn) in wanted.items():
+            df = bulk.get(sym)
+            if df is None or df.empty:
+                continue
+            vals = pd.to_numeric(df["close"], errors="coerce")
+            if fn:
+                vals = fn(vals)
+            write_fallback_series(series, pd.DataFrame({"date": df["date"], "value": vals}), label)
+    # Chicago Fed NFCI CSV
+    if "NFCI" in still:
+        try:
+            r = http_get("https://www.chicagofed.org/~/media/publications/nfci/nfci-data-series-csv.csv", timeout=25, retries=1)
+            t = pd.read_csv(io.StringIO(r.text))
+            dcol = next((c for c in t.columns if "date" in str(c).lower() or "friday" in str(c).lower()), t.columns[0])
+            vcol = next((c for c in t.columns if str(c).strip().upper() == "NFCI"), None)
+            if vcol:
+                write_fallback_series("NFCI", pd.DataFrame({"date": pd.to_datetime(t[dcol], errors="coerce"), "value": pd.to_numeric(t[vcol], errors="coerce")}).dropna(), "Chicago Fed NFCI csv")
+        except Exception as e:  # noqa: BLE001
+            log(f"NFCI fallback failed: {type(e).__name__}: {e}")
+    # BLS public API (no key: ~3 years of monthly data) for CPI, core CPI, unemployment, payrolls
+    bls_ids = {"CPIAUCSL": "CUSR0000SA0", "CPILFESL": "CUSR0000SA0L1E", "UNRATE": "LNS14000000", "PAYEMS": "CES0000000001"}
+    for series, sid in bls_ids.items():
+        if series not in still:
+            continue
+        try:
+            r = http_get(f"https://api.bls.gov/publicAPI/v2/timeseries/data/{sid}", timeout=25, retries=1,
+                         headers={**HEADERS, "User-Agent": "market-dashboard/1.0 (+https://github.com/wschmitt77/market-dashboard)"})
+            js = r.json()
+            rows = []
+            for s in js.get("Results", {}).get("series", []):
+                for d in s.get("data", []):
+                    if str(d.get("period", "")).startswith("M") and d["period"] != "M13":
+                        rows.append({"date": f"{d['year']}-{int(d['period'][1:]):02d}-01", "value": d["value"]})
+            df = pd.DataFrame(rows)
+            if df.empty:
+                raise RuntimeError("BLS API returned no monthly data: " + ", ".join(js.get("message", [])[:2]))
+            df["value"] = pd.to_numeric(df["value"], errors="coerce")
+            write_fallback_series(series, df, f"BLS public API {sid}")
+        except Exception as e:  # noqa: BLE001
+            log(f"BLS fallback {series} failed: {type(e).__name__}: {e}")
+        time.sleep(0.5)
 
 
 # ----------------------------------------------------------------------------- Cboe
@@ -306,10 +479,16 @@ def fetch_cboe(index: str) -> None:
         r = http_get(f"https://cdn.cboe.com/api/global/us_indices/daily_prices/{index}_History.csv")
         df = pd.read_csv(io.StringIO(r.text))
         df.columns = [c.strip().lower() for c in df.columns]
-        df = df.rename(columns={"date": "date"})
         df["date"] = pd.to_datetime(df["date"]).dt.strftime("%Y-%m-%d")
+        if "close" not in df.columns:  # e.g. SKEW_History.csv has DATE,SKEW
+            vcol = next((c for c in df.columns if c != "date"), None)
+            if vcol is None:
+                raise RuntimeError("no value column in " + ",".join(df.columns))
+            df = df.rename(columns={vcol: "close"})
         keep = [c for c in ["date", "open", "high", "low", "close"] if c in df.columns]
         df = df[keep]
+        df["close"] = pd.to_numeric(df["close"], errors="coerce")
+        df = df.dropna(subset=["close"])
         df = merge_by_date(df, path)
         write_csv(df, path)
         record(name, "ok", rows=len(df), last_date=str(df["date"].iloc[-1]))
@@ -318,19 +497,37 @@ def fetch_cboe(index: str) -> None:
 
 
 # ----------------------------------------------------------------------------- breadth
-def wiki_tickers(url: str, col_candidates=("Symbol", "Ticker")) -> list[str]:
+def wiki_tickers(url: str, col_candidates=("Symbol", "Ticker"), min_rows: int = 50) -> list[str]:
     r = http_get(url)
     tables = pd.read_html(io.StringIO(r.text))
+    best: list[str] = []
     for t in tables:
-        cols = [str(c) for c in t.columns]
-        for cand in col_candidates:
-            match = [c for c in cols if c.strip().lower() == cand.lower()]
-            if match and len(t) > 50:
-                syms = (t[match[0]].astype(str).str.strip().str.replace(".", "-", regex=False))
+        if len(t) < min_rows:
+            continue
+        t.columns = [" ".join(str(x) for x in c) if isinstance(c, tuple) else str(c) for c in t.columns]
+        for c in t.columns:
+            lc = c.strip().lower()
+            if any(cand.lower() in lc for cand in col_candidates):
+                syms = t[c].astype(str).str.strip().str.replace(".", "-", regex=False)
                 syms = [s for s in syms if re.fullmatch(r"[A-Z0-9\-]{1,6}", s)]
-                if len(syms) > 50:
-                    return syms
-    raise RuntimeError("no constituents table found")
+                if len(syms) >= min_rows and len(syms) > len(best):
+                    best = syms
+    if best:
+        return list(dict.fromkeys(best))
+    raise RuntimeError(f"no constituents table found ({len(tables)} tables)")
+
+
+def holdings_tickers() -> list[str]:
+    """Nasdaq-100 members from the Invesco QQQ holdings file written earlier in the run."""
+    p = RAW / "misc" / "qqq_holdings.csv"
+    if not p.exists():
+        raise RuntimeError("qqq_holdings.csv not available")
+    h = pd.read_csv(p)
+    syms = [str(s).strip().replace(".", "-") for s in h["ticker"].astype(str)]
+    syms = [s for s in syms if re.fullmatch(r"[A-Z0-9\-]{1,6}", s)]
+    if len(syms) < 80:
+        raise RuntimeError(f"only {len(syms)} tickers in holdings file")
+    return list(dict.fromkeys(syms))
 
 
 def yahoo_spark(symbols: list[str], rng: str = "2y") -> dict[str, pd.Series]:
@@ -358,7 +555,25 @@ def fetch_breadth(label: str, url: str, col_candidates) -> None:
     wide_path = RAW / "breadth" / f"{label}_closes.csv"
     cons_path = RAW / "breadth" / f"{label}_constituents.csv"
     try:
-        syms = wiki_tickers(url, col_candidates)
+        syms = None
+        errs = []
+        if label == "ndx":
+            try:
+                syms = holdings_tickers()
+            except Exception as e:  # noqa: BLE001
+                errs.append(f"holdings: {e}")
+        if syms is None:
+            try:
+                syms = wiki_tickers(url, col_candidates, min_rows=90 if label == "ndx" else 400)
+            except Exception as e:  # noqa: BLE001
+                errs.append(f"wikipedia: {e}")
+        if syms is None and cons_path.exists():
+            syms = pd.read_csv(cons_path)["symbol"].astype(str).tolist()
+            errs.append("using previous constituent list")
+        if syms is None:
+            raise RuntimeError("; ".join(errs))
+        if errs:
+            log(f"{name}: {'; '.join(errs)}")
         write_csv(pd.DataFrame({"symbol": syms}), cons_path)
         series: dict[str, pd.Series] = {}
         bulk = yf_bulk(syms, period="2y")
@@ -383,7 +598,9 @@ def fetch_breadth(label: str, url: str, col_candidates) -> None:
         wide = pd.DataFrame(series)
         wide.index.name = "date"
         wide = wide.sort_index().reset_index()
+        wide = drop_incomplete_today(wide)
         wide = merge_by_date(wide, wide_path, keep_days=CONFIG.get("breadth_history_days", 800))
+        wide = drop_incomplete_today(wide)
         write_csv(wide, wide_path)
         record(name, "ok", symbols=len(syms), with_data=len(series), rows=len(wide), last_date=str(wide["date"].iloc[-1]))
     except Exception as e:  # noqa: BLE001
@@ -460,11 +677,13 @@ def fetch_gdpnow() -> None:
         r = http_get("https://www.atlantafed.org/cqer/research/gdpnow")
         text = re.sub(r"<[^>]+>", " ", r.text)
         text = re.sub(r"\s+", " ", text)
-        m = re.search(r"Latest estimate:\s*(-?\d+(?:\.\d+)?)\s*percent\s*[-—–]+\s*([A-Z][a-z]+ \d{1,2}, \d{4})", text)
+        m = re.search(r"Latest estimate:?\s*(-?\d+(?:\.\d+)?)\s*percent", text, flags=re.I)
         if not m:
-            raise RuntimeError("pattern 'Latest estimate: X percent — Month D, YYYY' not found")
+            i = text.lower().find("latest estimate")
+            raise RuntimeError("estimate not found; page text near 'Latest estimate': " + (text[max(0, i - 40):i + 200] if i >= 0 else text[:200]))
         est = float(m.group(1))
-        as_of = pd.to_datetime(m.group(2)).strftime("%Y-%m-%d")
+        dm = re.search(r"([A-Z][a-z]+ \d{1,2}, \d{4})", text[m.end():m.end() + 120])
+        as_of = pd.to_datetime(dm.group(1)).strftime("%Y-%m-%d") if dm else today_iso()
         q = re.search(r"for (?:real GDP growth .*?in the )?(first|second|third|fourth) quarter of (\d{4})", text)
         quarter = f"{q.group(2)} Q{['first', 'second', 'third', 'fourth'].index(q.group(1)) + 1}" if q else ""
         df = append_row(path, {"date": as_of, "estimate": est, "quarter": quarter, "fetched": today_iso()})
@@ -510,9 +729,20 @@ def fetch_cleveland_nowcast() -> None:
 def fetch_ism() -> None:
     name, path = "misc/ism", RAW / "misc" / "ism.csv"
     try:
-        base = "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-report-on-business/"
         out = {"date": today_iso(), "pmi": None, "new_orders": None, "services_pmi": None, "release_month": ""}
-        r = http_get(base + "pmi/")
+        candidates = ["https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/",
+                      "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-report-on-business/pmi/",
+                      "https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/"]
+        r = None
+        for u in candidates:
+            try:
+                r = http_get(u, timeout=20, retries=1)
+                base = u.rsplit("/", 2)[0] + "/"
+                break
+            except Exception as e:  # noqa: BLE001
+                log(f"ism: {u} -> {type(e).__name__}: {e}")
+        if r is None:
+            raise RuntimeError("no ISM report page reachable")
         text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", r.text))
         m = re.search(r"Manufacturing PMI[^.]{0,80}?(\d{2}\.\d)\s*percent", text) or \
             re.search(r"\bPMI\W{0,3}[^.]{0,60}?(\d{2}\.\d)\s*percent", text)
@@ -551,12 +781,6 @@ def fetch_cboe_putcall() -> None:
         row = {"date": today_iso(), "equity_pc": grab(r"EQUITY PUT/CALL RATIO"),
                "index_pc": grab(r"INDEX PUT/CALL RATIO"), "total_pc": grab(r"TOTAL PUT/CALL RATIO"),
                "data_date": ""}
-        dm = re.search(r"(\w+ \d{1,2}, \d{4})", text)
-        if dm:
-            try:
-                row["data_date"] = pd.to_datetime(dm.group(1)).strftime("%Y-%m-%d")
-            except Exception:  # noqa: BLE001
-                pass
         if row["equity_pc"] is None and row["total_pc"] is None:
             raise RuntimeError("put/call ratios not found on page")
         df = append_row(path, row)
@@ -573,7 +797,9 @@ def fetch_qqq_holdings() -> None:
         url = ("https://www.invesco.com/us/financial-products/etfs/holdings/main/holdings/0"
                "?audienceType=Investor&action=download&ticker=QQQ")
         r = http_get(url)
-        df = pd.read_csv(io.StringIO(r.text))
+        lines = r.text.splitlines()
+        hdr = next((i for i, ln in enumerate(lines) if "Holding Ticker" in ln or ("Weight" in ln and "Ticker" in ln)), 0)
+        df = pd.read_csv(io.StringIO("\n".join(lines[hdr:])), engine="python", on_bad_lines="skip")
         df.columns = [str(c).strip() for c in df.columns]
         wcol = next((c for c in df.columns if "weight" in c.lower()), None)
         tcol = next((c for c in df.columns if c.lower() in ("holding ticker", "ticker", "symbol")), None)
@@ -652,7 +878,8 @@ def fetch_calendar() -> None:
         cal["fomc"] = CONFIG.get("calendar_fallback", {}).get("fomc", [])
 
     def bls_dates(url: str) -> list[str]:
-        r = http_get(url, headers={**HEADERS, "Referer": "https://www.bls.gov/"})
+        r = http_get(url, timeout=20, retries=1, headers={**HEADERS, "Referer": "https://www.bls.gov/",
+                                                           "User-Agent": "market-dashboard/1.0 (+https://github.com/wschmitt77/market-dashboard)"})
         tables = pd.read_html(io.StringIO(r.text))
         out = []
         for t in tables:
@@ -702,11 +929,15 @@ def main(argv: list[str]) -> int:
         for t in tickers:
             guarded(f"prices/{t}", fetch_price, t, bulk.get(t), budget=45)
     if not only or "fred" in only:
+        log("FRED via " + ("API key" if FRED_API_KEY else "fredgraph.csv (no FRED_API_KEY secret set)"))
         for s in CONFIG["fred_series"]:
-            guarded(f"fred/{s}", fetch_fred, s, budget=45)
+            guarded(f"fred/{s}", fetch_fred, s, budget=40)
+        guarded("fred/fallbacks", fetch_fred_fallbacks, budget=300)
     if not only or "cboe" in only:
         for idx in CONFIG["cboe_indices"]:
             guarded(f"cboe/{idx}", fetch_cboe, idx, budget=45)
+    if not only or "misc" in only:
+        guarded("misc/qqq_holdings", fetch_qqq_holdings, budget=60)
     if not only or "breadth" in only:
         guarded("breadth/spx", fetch_breadth, "spx", "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies", ("Symbol",), budget=420)
         guarded("breadth/ndx", fetch_breadth, "ndx", "https://en.wikipedia.org/wiki/Nasdaq-100", ("Ticker", "Symbol"), budget=240)
@@ -716,7 +947,6 @@ def main(argv: list[str]) -> int:
         guarded("misc/cleveland_nowcast", fetch_cleveland_nowcast, budget=60)
         guarded("misc/ism", fetch_ism, budget=90)
         guarded("misc/cboe_putcall", fetch_cboe_putcall, budget=60)
-        guarded("misc/qqq_holdings", fetch_qqq_holdings, budget=60)
         guarded("misc/sp500_pe", fetch_multpl, "s-p-500-pe-ratio", "sp500_pe", budget=60)
         guarded("misc/shiller_cape", fetch_multpl, "shiller-pe", "shiller_cape", budget=60)
         guarded("misc/calendar", fetch_calendar, budget=120)

@@ -50,19 +50,34 @@ class Data:
         except Exception:  # noqa: BLE001
             return None
 
-    def _csv(self, p: Path) -> pd.DataFrame | None:
-        key = str(p)
+    def _csv(self, p: Path, dedupe: bool = True) -> pd.DataFrame | None:
+        key = f"{p}|{dedupe}"
         if key not in self._cache:
             try:
                 df = pd.read_csv(p)
                 if "date" in df.columns:
                     df["date"] = pd.to_datetime(df["date"], errors="coerce")
-                    df = df.dropna(subset=["date"]).sort_values("date").drop_duplicates("date", keep="last")
+                    df = df.dropna(subset=["date"]).sort_values("date", kind="stable")
+                    if dedupe:
+                        df = df.drop_duplicates("date", keep="last")
                     df = df.set_index("date")
                 self._cache[key] = df
             except Exception:  # noqa: BLE001
                 self._cache[key] = None
         return self._cache[key]
+
+    def _incomplete_session_date(self) -> str | None:
+        """The trading date whose bar may be partial: the feed's run date when it ran before the 4 PM ET close."""
+        try:
+            run_at = pd.Timestamp(self.manifest.get("run_at"))
+            if run_at.tzinfo is None:
+                run_at = run_at.tz_localize("UTC")
+            et = run_at.tz_convert("America/New_York")
+            if et.hour < 16 or (et.hour == 16 and et.minute < 15):
+                return et.strftime("%Y-%m-%d")
+        except Exception:  # noqa: BLE001
+            return None
+        return None
 
     def prices(self, sym: str) -> pd.DataFrame | None:
         df = self._csv(self.raw / "prices" / f"{sym.replace('^', '_')}.csv")
@@ -71,6 +86,9 @@ class Data:
         for c in ("open", "high", "low", "close", "adj_close", "volume"):
             if c in df.columns:
                 df[c] = pd.to_numeric(df[c], errors="coerce")
+        bad = self._incomplete_session_date()
+        if bad is not None and len(df) and pd.Timestamp(df.index[-1]).strftime("%Y-%m-%d") == bad:
+            df = df.iloc[:-1]
         return df.dropna(subset=["close"])
 
     def close(self, sym: str, adj: bool = False) -> pd.Series | None:
@@ -98,10 +116,14 @@ class Data:
         df = self._csv(self.raw / "breadth" / f"{label}_closes.csv")
         if df is None:
             return None
-        return df.apply(pd.to_numeric, errors="coerce")
+        df = df.apply(pd.to_numeric, errors="coerce")
+        bad = self._incomplete_session_date()
+        if bad is not None and len(df) and pd.Timestamp(df.index[-1]).strftime("%Y-%m-%d") == bad:
+            df = df.iloc[:-1]
+        return df
 
     def misc(self, name: str) -> pd.DataFrame | None:
-        return self._csv(self.raw / "misc" / f"{name}.csv")
+        return self._csv(self.raw / "misc" / f"{name}.csv", dedupe=name not in ("cleveland_nowcast", "qqq_holdings"))
 
     def misc_json(self, name: str):
         return self._json(self.raw / "misc" / f"{name}.json")
@@ -340,7 +362,8 @@ class Engine:
         status = status or ("live" if value is not None else "unavailable")
         if value is None:
             signal, state = "n/a", "neutral"
-            reading = reading or "Source unavailable in today's feed."
+            reading = "Source unavailable in today's feed."
+            detail = ""
         row = {"n": self.n, "id": id or f"m{self.n}", "layer_key": layer_key, "layer": layer, "name": name,
                "value": None if value is None else round(float(value), 4), "fmt": fmt or f(value),
                "value2": None if value2 is None else round(float(value2), 4), "fmt2": fmt2 or ("" if value2 is None else f(value2)),
@@ -761,7 +784,7 @@ class Engine:
         pc_series = None
         if pc is not None and "equity_pc" in pc.columns:
             pc_series = pd.to_numeric(pc["equity_pc"], errors="coerce").dropna()
-            pc10 = last(pc_series.rolling(10, min_periods=3).mean())
+            pc10 = last(pc_series.rolling(10, min_periods=1).mean())
         sk = last(skew)
         self.add(LK, L, "Equity put/call ratio (10-day avg) and SKEW", id="put_call", value=pc10, fmt=f(pc10, "{:.2f}"), value2=sk, fmt2=f(sk, "{:.0f}"), col1="put/call 10d", col2="SKEW",
                  signal="fear" if pc10 is not None and pc10 > 0.9 else ("complacent" if pc10 is not None and pc10 < 0.55 else "neutral"), state="warn" if pc10 is not None and (pc10 > 0.9 or pc10 < 0.55) else "ok",
@@ -880,21 +903,31 @@ class Engine:
         if nc is not None and len(nc):
             latest = nc.reset_index()
             latest = latest[latest["date"] == latest["date"].max()]
+            def measure_of(txt: str):
+                t = txt.lower().strip()
+                if "core cpi" in t:
+                    return "core_cpi"
+                if "core pce" in t:
+                    return "core_pce"
+                if t in ("cpi", "headline cpi"):
+                    return "cpi"
+                if t in ("pce", "headline pce"):
+                    return "pce"
+                return None
             for _, r in latest.iterrows():
-                row_l, col_l = str(r["row"]).lower().strip(), str(r["col"]).lower()
-                key = None
-                if row_l in ("cpi", "headline cpi"):
-                    key = "cpi"
-                elif "core cpi" in row_l:
-                    key = "core_cpi"
-                elif row_l in ("pce", "headline pce"):
-                    key = "pce"
-                elif "core pce" in row_l:
-                    key = "core_pce"
-                if key:
-                    kind = "yoy" if "year" in col_l else ("mom" if "month" in col_l else None)
-                    if kind and f"{key}_{kind}" not in ncv:
-                        ncv[f"{key}_{kind}"] = float(r["value"])
+                row_t, col_t = str(r["row"]), str(r["col"])
+                key = measure_of(col_t) or measure_of(row_t)
+                if not key:
+                    continue
+                other = (row_t if measure_of(col_t) else col_t).lower()
+                if "year" in other:
+                    kind = "yoy"
+                elif "month" in other:
+                    kind = "mom"
+                else:
+                    kind = {0: "mom", 1: "yoy", 2: "qtr"}.get(int(r["table"]) if str(r["table"]).isdigit() else -1)
+                if kind and f"{key}_{kind}" not in ncv:
+                    ncv[f"{key}_{kind}"] = float(r["value"])
         cpi = d.fred("CPIAUCSL")
         cpi_yoy = (change(cpi, 12, pct=True)) if cpi is not None else None
         cpi_mom = change(cpi, 1, pct=True) if cpi is not None else None
@@ -917,12 +950,18 @@ class Engine:
                  chg_5d=(gv - last(gas["week_ago"])) if gas is not None and "week_ago" in gas.columns and gv is not None and last(gas["week_ago"]) is not None else None,
                  as_of=last_date(gas) if gas is not None else last_date(gasw), source="AAA gasprices.aaa.com (daily) with EIA weekly via FRED as history; WTI from FRED")
         gdp = d.misc("gdpnow")
+        gdp_src = "Atlanta Fed GDPNow page via the GitHub data feed"
+        if gdp is None or "estimate" not in gdp.columns:
+            g = d.fred("GDPNOW")
+            if g is not None and len(g):
+                gdp = pd.DataFrame({"estimate": g.values, "quarter": ""}, index=g.index)
+                gdp_src = "Atlanta Fed GDPNow via FRED (series GDPNOW)"
         gdpv = last(gdp["estimate"]) if gdp is not None and "estimate" in gdp.columns else None
         gdp_prev = last(gdp["estimate"], 1) if gdp is not None and "estimate" in gdp.columns else None
         self.add(LK, L, "Atlanta Fed GDPNow", id="gdpnow", value=gdpv, fmt=pct(gdpv, False), value2=(gdpv - gdp_prev) if gdpv is not None and gdp_prev is not None else None, fmt2=f((gdpv - gdp_prev) if gdpv is not None and gdp_prev is not None else None, "{:+.1f} pp vs prior"), col1="real GDP nowcast", col2="revision", unit="%",
                  signal="strong" if gdpv is not None and gdpv > 3 else ("stall" if gdpv is not None and gdpv < 1 else "trend"), state="warn" if gdpv is not None and gdpv < 1 else "ok",
-                 reading=(f"GDPNow tracks {f(gdpv)}% annualized for {str(gdp['quarter'].iloc[-1]) if gdp is not None and 'quarter' in gdp.columns else 'the current quarter'}." if gdpv is not None else ""),
-                 threshold="< 1% stall speed, > 3% hot", as_of=last_date(gdp) if gdp is not None else None, source="Atlanta Fed GDPNow page via the GitHub data feed")
+                 reading=(f"GDPNow tracks {f(gdpv)}% annualized for {str(gdp['quarter'].iloc[-1]) or 'the current quarter'}." if gdpv is not None else ""),
+                 threshold="< 1% stall speed, > 3% hot", as_of=last_date(gdp["estimate"]) if gdp is not None else None, source=gdp_src)
         cl4 = claims.rolling(4).mean() if claims is not None else None
         clv = last(cl4)
         cl_low = float(cl4.iloc[-52:].min()) if cl4 is not None and len(cl4.dropna()) > 10 else None
@@ -1014,7 +1053,7 @@ class Engine:
         for k in ("xly_xlp", "sphb_splv", "smh_qqq"):
             ser[k] = ratios[k].reindex(idx) if ratios.get(k) is not None else np.nan
         ser["qqq_ivv"] = qi.reindex(idx)
-        ser["put_call10"] = pc_series.rolling(10, min_periods=3).mean().reindex(idx, method="ffill") if pc_series is not None else np.nan
+        ser["put_call10"] = pc_series.rolling(10, min_periods=1).mean().reindex(idx, method="ffill") if pc_series is not None else np.nan
         ser["sector_dispersion"] = disp_series.reindex(idx) if disp_series is not None else np.nan
         # historical composite scores (price + vol components) for the chart
         dip_hist = dip_series(qqq.iloc[-900:], None, None, vix, vix3m)
