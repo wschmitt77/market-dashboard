@@ -372,7 +372,7 @@ def write_fallback_series(series: str, df: pd.DataFrame, source: str) -> None:
 def treasury_curve(kind: str, years: list[int]) -> pd.DataFrame:
     frames = []
     for y in years:
-        url = (f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/all/{y}"
+        url = (f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/{y}/all"
                f"?type={kind}&field_tdr_date_value={y}&page&_format=csv")
         try:
             r = http_get(url, timeout=25, retries=1)
@@ -514,7 +514,21 @@ def wiki_tickers(url: str, col_candidates=("Symbol", "Ticker"), min_rows: int = 
                     best = syms
     if best:
         return list(dict.fromkeys(best))
-    raise RuntimeError(f"no constituents table found ({len(tables)} tables)")
+    shapes = "; ".join(f"{len(t)}x{len(t.columns)}:" + ",".join(str(c)[:12] for c in list(t.columns)[:4]) for t in sorted(tables, key=len, reverse=True)[:3])
+    raise RuntimeError(f"no constituents table found ({len(tables)} tables; largest {shapes})")
+
+
+def nasdaq_api_tickers() -> list[str]:
+    r = http_get("https://api.nasdaq.com/api/quote/list-type/nasdaq100", timeout=20, retries=1,
+                 headers={**HEADERS, "Accept": "application/json, text/plain, */*", "Origin": "https://www.nasdaq.com",
+                          "Referer": "https://www.nasdaq.com/"})
+    js = r.json()
+    rows = (((js.get("data") or {}).get("data") or {}).get("rows")) or (js.get("data") or {}).get("rows") or []
+    syms = [str(x.get("symbol", "")).strip().replace(".", "-").replace("/", "-") for x in rows]
+    syms = [x for x in syms if re.fullmatch(r"[A-Z0-9\-]{1,6}", x)]
+    if len(syms) < 90:
+        raise RuntimeError(f"Nasdaq API returned {len(syms)} symbols")
+    return list(dict.fromkeys(syms))
 
 
 def holdings_tickers() -> list[str]:
@@ -559,9 +573,14 @@ def fetch_breadth(label: str, url: str, col_candidates) -> None:
         errs = []
         if label == "ndx":
             try:
-                syms = holdings_tickers()
+                syms = nasdaq_api_tickers()
             except Exception as e:  # noqa: BLE001
-                errs.append(f"holdings: {e}")
+                errs.append(f"nasdaq api: {e}")
+            if syms is None:
+                try:
+                    syms = holdings_tickers()
+                except Exception as e:  # noqa: BLE001
+                    errs.append(f"holdings: {e}")
         if syms is None:
             try:
                 syms = wiki_tickers(url, col_candidates, min_rows=90 if label == "ndx" else 400)
@@ -679,8 +698,11 @@ def fetch_gdpnow() -> None:
         text = re.sub(r"\s+", " ", text)
         m = re.search(r"Latest estimate:?\s*(-?\d+(?:\.\d+)?)\s*percent", text, flags=re.I)
         if not m:
-            i = text.lower().find("latest estimate")
-            raise RuntimeError("estimate not found; page text near 'Latest estimate': " + (text[max(0, i - 40):i + 200] if i >= 0 else text[:200]))
+            m = re.search(r"Latest estimate[^0-9\-]{0,160}?(-?\d+\.\d+)", r.text, flags=re.I | re.S)
+        if not m:
+            hits = [mm.start() for mm in re.finditer(r"estimate", r.text, flags=re.I)][:3]
+            snippet = " || ".join(re.sub(r"\s+", " ", r.text[max(0, h - 80):h + 160]) for h in hits)
+            raise RuntimeError("estimate not found; html near 'estimate': " + snippet[:400])
         est = float(m.group(1))
         dm = re.search(r"([A-Z][a-z]+ \d{1,2}, \d{4})", text[m.end():m.end() + 120])
         as_of = pd.to_datetime(dm.group(1)).strftime("%Y-%m-%d") if dm else today_iso()
@@ -763,7 +785,8 @@ def fetch_ism() -> None:
         except Exception:  # noqa: BLE001
             pass
         if out["pmi"] is None and out["services_pmi"] is None:
-            raise RuntimeError("no PMI number parsed from ISM pages")
+            i = text.find("PMI")
+            raise RuntimeError("no PMI number parsed; text near first 'PMI': " + text[max(0, i - 100):i + 260])
         df = append_row(path, out)
         record(name, "ok", rows=len(df), pmi=out["pmi"], services=out["services_pmi"])
     except Exception as e:  # noqa: BLE001
@@ -805,7 +828,7 @@ def fetch_qqq_holdings() -> None:
         tcol = next((c for c in df.columns if c.lower() in ("holding ticker", "ticker", "symbol")), None)
         ncol = next((c for c in df.columns if c.lower() in ("name", "security name", "holding name")), None)
         if not wcol or not tcol:
-            raise RuntimeError("weight/ticker columns not found: " + ",".join(df.columns))
+            raise RuntimeError("weight/ticker columns not found; response starts: " + re.sub(r"\s+", " ", r.text[:160]))
         out = pd.DataFrame({"date": today_iso(), "ticker": df[tcol].astype(str).str.strip(),
                             "name": df[ncol].astype(str) if ncol else "",
                             "weight": pd.to_numeric(df[wcol].astype(str).str.replace("%", ""), errors="coerce")})
