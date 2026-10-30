@@ -703,12 +703,24 @@ class Engine:
         else:
             caps = self.d._csv(self.d.raw / "misc" / "ndx_marketcaps.csv", dedupe=False)
             if caps is not None and "market_cap" in caps.columns and len(caps) >= 90:
-                c = caps.reset_index().sort_values("market_cap", ascending=False)
-                top10 = float(c["market_cap"].head(10).sum() / c["market_cap"].sum() * 100)
+                c = caps.reset_index().copy()
+                # dual-class listings (GOOGL/GOOG) report the whole company's cap on each line: split it between the classes
+                base = c["name"].astype(str).str.lower().str.replace(r"\b(class [a-c]|common stock|ordinary shares|inc\.?|corporation|corp\.?|plc|ltd\.?|holdings?)\b", "", regex=True).str.replace(r"[^a-z0-9]", "", regex=True)
+                c["market_cap"] = c["market_cap"] / base.map(base.value_counts())
+                w = c["market_cap"] / c["market_cap"].sum()
+                # Nasdaq-100 quarterly capping rule: if names above 4.5% sum to more than 48%, they are scaled to 40%
+                big = w > 0.045
+                if w[big].sum() > 0.48:
+                    w = w.copy()
+                    w[big] = w[big] * 0.40 / w[big].sum()
+                    w[~big] = w[~big] * 0.60 / w[~big].sum()
+                c["weight"] = w * 100
+                c = c.sort_values("weight", ascending=False)
+                top10 = float(c["weight"].head(10).sum())
                 names = ", ".join(str(x) for x in c["ticker"].head(5))
                 hold = caps
-                top_src = "Nasdaq-100 member market caps (Nasdaq API) via the GitHub data feed; approximates the fund's modified cap weights"
-                approx = " (approximate, from market caps)"
+                top_src = "Nasdaq-100 member market caps (Nasdaq API) via the GitHub data feed, with the index's 4.5%/48%→40% capping rule applied; an approximation of the fund's weights"
+                approx = " (approx.)"
         self.add(LK, L, "Top-10 holdings weight in QQQ", id="qqq_top10", value=top10, fmt=pct(top10, False) + approx, col1="top 10", col2="",
                  signal="concentrated" if top10 is not None and top10 > 50 else "normal", state="warn" if top10 is not None and top10 > 50 else "ok",
                  reading=f"Ten names are about {f(top10, '{:.0f}')}% of the index ({names}, …): single-stock risk is index risk." if top10 is not None else "",
