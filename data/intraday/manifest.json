@@ -1,0 +1,16 @@
+{
+ "run_at": "2026-11-05T17:56:35+00:00",
+ "sources": {
+  "intraday/snapshot": {
+   "status": "ok",
+   "fetched_at": "2026-11-05T17:56:36+00:00",
+   "symbols": 33,
+   "as_of": "2026-11-05 12:55"
+  }
+ },
+ "summary": {
+  "ok": 1,
+  "total": 1,
+  "failed": []
+ }
+}
