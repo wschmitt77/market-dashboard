@@ -153,6 +153,10 @@ def guarded(name: str, fn, *args, budget: float | None = None, **kwargs):
     if "error" in box:
         e = box["error"]
         record(name, "failed", error=f"{type(e).__name__}: {e}")
+        try:
+            log("   traceback: " + " | ".join(traceback.format_exception(type(e), e, e.__traceback__)[-3:]).replace("\n", " ")[:600])
+        except Exception:  # noqa: BLE001
+            pass
         return None
     log(f"   ({name} took {time.time() - t0:.1f}s)")
     return box.get("result")
@@ -1014,12 +1018,21 @@ def main(argv: list[str]) -> int:
     only = set(a for a in argv[1:] if not a.startswith("-"))
     RAW.mkdir(parents=True, exist_ok=True)
     if "intraday" in only:
+        global LOG_PATH
+        out_dir = ROOT / "data" / "intraday"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        LOG_PATH = out_dir / "fetch_log.txt"
         try:
             LOG_PATH.write_text("")
         except Exception:  # noqa: BLE001
             pass
+        try:
+            import yfinance as _yf  # noqa: WPS433
+            log(f"yfinance {_yf.__version__}")
+        except Exception as e:  # noqa: BLE001
+            log(f"yfinance import failed: {e}")
         guarded("intraday/snapshot", fetch_intraday, budget=240)
-        (ROOT / "data" / "intraday" / "manifest.json").write_text(json.dumps(MANIFEST, indent=1))
+        (out_dir / "manifest.json").write_text(json.dumps(MANIFEST, indent=1))
         log("intraday snapshot done")
         sys.stdout.flush()
         os._exit(0)

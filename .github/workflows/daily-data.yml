@@ -57,7 +57,7 @@ jobs:
         run: |
           git config user.name "market-data-bot"
           git config user.email "market-data-bot@users.noreply.github.com"
-          if [ "$MODE" = "intraday" ]; then git add -A data/intraday; else git add -A data; fi
+          if [ "$MODE" = "intraday" ]; then mkdir -p data/intraday && git add -A data/intraday; else git add -A data; fi
           if git diff --cached --quiet; then
             echo "No data changes."
             exit 0
