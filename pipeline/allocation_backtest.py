@@ -46,9 +46,10 @@ def size_for(deepest: float, table) -> float:
 
 
 # ---------------------------------------------------------------------------------------------------------- data
-def load(repo: Path) -> dict:
+def load(repo: Path, asset: str = "QQQ") -> dict:
+    """asset: the fund the ladder buys and the sleeve levers (QQQ by default; SPY, IWM or a sector ETF as a robustness check)."""
     d = P.Data(repo)
-    qqq = d.close("QQQ", adj=True).dropna()
+    qqq = d.close(asset, adj=True).dropna()
     idx = qqq.index
     spy = d.close("SPY", adj=True).dropna().reindex(idx).ffill()
     # cash rate: 3-month bill (FRED/Treasury), else Yahoo ^IRX
@@ -103,7 +104,8 @@ def load(repo: Path) -> dict:
 
 # ---------------------------------------------------------------------------------------------------------- simulation
 def simulate(D: dict, i0: int, i1: int, *, ivv0: float, qqq0: float, cash0: float, tranche_frac: float = 0.25, sizing=SIZING_50,
-             lev: float = 3.0, fee: float = 0.0095, reserve_mix=None, ladder: bool = True, sleeve: bool = True, fund_core: bool = False) -> dict:
+             lev: float = 3.0, fee: float = 0.0095, reserve_mix=None, ladder: bool = True, sleeve: bool = True, fund_core: bool = False,
+             weeks: int = 2, exit_pct: float = 0.03, vol_cap: float = 45.0) -> dict:
     """Simulate from index i0 to i1 (inclusive). reserve_mix: {"tbill": w, "bond": w, "gold": w}. fund_core: fund the sleeve from
     core holdings (QQQ then SPY) when the reserve is empty, otherwise only the reserve pays for it."""
     qqq, spy, tbd, r, bond, gold = D["qqq"], D["spy"], D["tbd"], D["r"], D["bond"], D["gold"]
@@ -155,10 +157,10 @@ def simulate(D: dict, i0: int, i1: int, *, ivv0: float, qqq0: float, cash0: floa
             above = qqq[i] > sma200[i] if not math.isnan(sma200[i]) else False
             st["wk_above200"] = st["wk_above200"] + 1 if above else 0
             size = size_for(st["deepest"], sizing) * exposure_scale
-            if rung > 0 and not math.isnan(sma200[i]) and qqq[i] < sma200[i] * 0.97:
+            if rung > 0 and not math.isnan(sma200[i]) and qqq[i] < sma200[i] * (1 - exit_pct):
                 desired = 0.0
                 st["cooloff"] = 4
-            elif st["wk_above200"] >= 2 and not math.isnan(rv[i]) and rv[i] < 45 and st["cooloff"] == 0 and size > rung and (not st["glided"] or d_now <= -0.15):
+            elif st["wk_above200"] >= weeks and not math.isnan(rv[i]) and rv[i] < vol_cap and st["cooloff"] == 0 and size > rung and (not st["glided"] or d_now <= -0.15):
                 desired = size
             if d_now > -0.10 and desired > 0.10 * exposure_scale:
                 desired = 0.10 * exposure_scale
