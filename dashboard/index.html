@@ -75,6 +75,20 @@
   [data-dash-source-state=empty] { color: transparent; }
   [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
   .ms-foot { margin-top: var(--cds-gap-lg); }
+  .ms-plan { border-left: 4px solid var(--color-fg); margin-bottom: var(--cds-gap-md); }
+  .ms-plan-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--cds-gap-sm); flex-wrap: wrap; }
+  .ms-plan-headline { margin: var(--cds-gap-xs) 0 .2em; font-size: calc(var(--cds-font-size-title) * 1.05); }
+  .ms-plan-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(min(100%, 16rem), 1fr); gap: var(--cds-gap-md); align-items: start; margin-top: var(--cds-gap-sm); }
+  .ms-plan-grid .ms-label { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 0 0 var(--cds-gap-xs); }
+  .ms-alloc-bars { margin-bottom: var(--cds-gap-md); }
+  .ms-alloc-bars svg { display: block; width: 100%; }
+  .ms-plan-rules { list-style: none; margin: 0; padding: 0; display: grid; gap: .45em; font-size: var(--cds-font-size-caption); }
+  .ms-plan-rules li { display: grid; grid-template-columns: .6rem 1fr; gap: .5em; align-items: baseline; }
+  .ms-plan-rules .ms-rdot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--cds-chart-muted); display: inline-block; transform: translateY(-1px); }
+  .ms-plan-rules .ms-rdot.ok { background: var(--color-ok); } .ms-plan-rules .ms-rdot.warn { background: var(--color-warn); } .ms-plan-rules .ms-rdot.bad { background: var(--color-bad); }
+  .ms-plan-rules b { font-weight: var(--cds-font-weight-medium); }
+  .ms-fund-name { display: block; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  @media (max-width: 800px) { .ms-plan-grid { grid-template-columns: 1fr; } }
   @media (max-width: 600px) {
     .ms-tile .ms-big { font-size: var(--cds-font-size-heading); }
     .ms table.ms-stack thead { display: none; }
@@ -93,6 +107,37 @@
     <p class="ms-muted">QQQ · IVV · TQQQ — data through <span data-draw="data_through" data-source="summary" data-field="data_through" data-row="0">—</span> · built <span data-draw="generated_at" data-source="summary" data-field="generated_at" data-row="0">—</span> · <span data-draw="metrics_live" data-source="summary" data-field="metrics_live_fmt" data-row="0">—</span> · <span data-draw="feed_run" data-source="summary" data-field="feed_run_utc" data-row="0">—</span> UTC feed</p>
     <p class="ms-takeaway" data-draw="takeaway" data-source="summary" data-field="takeaway" data-row="0">—</p>
   </header>
+
+  <section id="plan" aria-label="Recommended allocation">
+    <div class="ms-card ms-plan">
+      <div class="ms-plan-head">
+        <div>
+          <h3>Recommended allocation today</h3>
+          <p class="ms-note">Your plan's rules applied to the holdings on file: unlevered adds on a ladder of drawdown levels, a leveraged sleeve that opens only after QQQ reclaims its 200-day, and a reserve of bills, Treasuries and gold.</p>
+        </div>
+        <span class="ms-chip">closes through <span data-draw="plan_asof" data-source="plan" data-field="as_of" data-where="key=headline">—</span></span>
+      </div>
+      <p class="ms-big ms-plan-headline" data-draw="plan_headline" data-source="plan" data-field="value" data-where="key=headline">—</p>
+      <p class="ms-note" data-draw="plan_headline_detail" data-source="plan" data-field="detail" data-where="key=headline">—</p>
+      <div class="ms-plan-grid">
+        <div class="ms-table-wrap"><table class="ms-stack" data-source="allocation" data-row-key="ticker">
+          <thead><tr><th data-field="ticker">Fund</th><th data-field="role">Role</th><th class="num" data-field="target_fmt">Target</th><th class="num" data-field="target_pct_fmt">Share</th><th class="num" data-field="held_fmt">Held</th><th data-field="trade_fmt">Trade</th><th data-field="note">Note</th></tr></thead>
+          <tbody data-draw="alloc_table"></tbody></table></div>
+        <div class="ms-alloc-side">
+          <div class="ms-label">Held today vs target</div>
+          <div class="ms-alloc-bars" data-draw="alloc_bars" data-source="allocation"></div>
+          <div class="ms-label">Where each rule stands</div>
+          <ul class="ms-plan-rules" data-draw="plan_rules" data-source="plan"></ul>
+        </div>
+      </div>
+      <details><summary>Rules, evidence and holdings on file</summary>
+        <div class="ms-table-wrap"><table class="ms-stack" data-source="plan" data-row-key="key">
+          <thead><tr><th data-field="label">Rule</th><th data-field="value">Where it stands</th><th data-field="detail">Detail</th></tr></thead>
+          <tbody data-draw="plan_table"></tbody></table></div>
+        <p class="ms-note">The ladder buys QQQ/IVV 2/3–1/3 at 14%, 20% and 27% QQQ drawdowns (or 7/10/15% for IVV), each tranche 23% of the reserve held when the episode began. The leveraged sleeve (QLD, or TQQQ at two-thirds of the dollars) is sized by the deepest close of the episode — 15% at −15%, 30% at −25%, 45% at −35%, 75% at −50% — bought only after two weekly closes above the 200-day with realized vol under 45%, sold on a weekly close 3% below it, cut back as the drawdown closes. The reserve is 60% T-bills, 20% IEF, 20% GLD. These are the owner's rules read mechanically from the closes, not advice; the evidence row shows how they did across rolling seven-year windows since 2000, in-sample.</p>
+      </details>
+    </div>
+  </section>
 
   <section id="action" class="ms-grid" aria-label="Regime, scores and action">
     <div class="ms-card">

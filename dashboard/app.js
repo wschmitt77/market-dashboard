@@ -63,6 +63,76 @@
 
   ['qqq', 'ivv', 'tqqq', 'vix'].forEach((k) => dash.draw('spark_' + k, (el) => { const rows = rowsOf('series', el, 'chart'); if (!rows) return; MS.spark(el, rows, k, 126); }));
 
+  // ---------------------------------------------------------------- recommended allocation (plan panel)
+  textDraw('plan_headline', 'plan', 'value', { where: { key: 'headline' } });
+  textDraw('plan_headline_detail', 'plan', 'detail', { where: { key: 'headline' } });
+  textDraw('plan_asof', 'plan', 'as_of', { where: { key: 'headline' } });
+  const tradeCls = (s, role) => (role === 'reserve' ? '' : /^buy/.test(s || '') ? 'ok' : /^sell/.test(s || '') ? 'bad' : '');
+  dash.draw('alloc_table', (tb) => {
+    const rows = rowsOf('allocation', tb, 'table'); if (!rows) return;
+    MS.clear(tb);
+    rows.forEach((r) => {
+      const tr = document.createElement('tr'); tr.dataset.key = r.ticker;
+      [['ticker', 0, 'Fund', 'ms-nolabel'], ['role', 0, 'Role'], ['target_fmt', 1, 'Target'], ['target_pct_fmt', 1, 'Share'], ['held_fmt', 1, 'Held'], ['trade_fmt', 0, 'Trade'], ['note', 0, 'Note', 'ms-nolabel']].forEach(([f, num, label, cls]) => {
+        const td = document.createElement('td'); td.dataset.label = label; if (num) td.className = 'num'; if (cls) td.classList.add(cls);
+        if (f === 'ticker') { td.appendChild(document.createTextNode(String(r.ticker))); const nm = document.createElement('span'); nm.className = 'ms-fund-name'; nm.textContent = r.name || ''; td.appendChild(nm); }
+        else if (f === 'trade_fmt') { const chip = document.createElement('span'); chip.className = 'ms-chip ' + tradeCls(r.trade_fmt, r.role); chip.textContent = r.trade_fmt == null || r.trade_fmt === '' ? '—' : String(r.trade_fmt); td.appendChild(chip); }
+        else td.textContent = r[f] == null || r[f] === '' ? '—' : String(r[f]);
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+  });
+  dash.draw('alloc_bars', (el) => {
+    const rows = rowsOf('allocation', el, 'chart'); if (!rows) return;
+    MS.clear(el);
+    const palette = MS.colors();
+    const W = Math.max(240, el.clientWidth || 300), rowH = 22, gap = 10, labelW = 44, legendH = 18;
+    const bars = [['Held', 'held_usd'], ['Target', 'target_usd']];
+    const H = bars.length * (rowH + gap) + legendH + 4;
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('height', H).attr('role', 'img').attr('aria-label', 'Held versus target allocation by fund');
+    bars.forEach(([label, field], bi) => {
+      const total = d3.sum(rows, (r) => Math.max(0, MS.num(r[field]) || 0)) || 1;
+      const y = legendH + bi * (rowH + gap);
+      svg.append('text').attr('x', 0).attr('y', y + rowH / 2).attr('dy', '0.35em').attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text(label);
+      let x = labelW;
+      rows.forEach((r, i) => {
+        const v = Math.max(0, MS.num(r[field]) || 0); if (!v) return;
+        const w = (v / total) * (W - labelW);
+        svg.append('rect').attr('x', x).attr('y', y).attr('width', Math.max(0, w - 1)).attr('height', rowH).attr('fill', palette[i % palette.length]).attr('rx', 2)
+          .append('title').text(`${r.ticker} ${label.toLowerCase()}: ${r[field === 'held_usd' ? 'held_fmt' : 'target_fmt']} (${Math.round((v / total) * 100)}%)`);
+        if (w > 34) svg.append('text').attr('x', x + w / 2).attr('y', y + rowH / 2).attr('dy', '0.35em').attr('text-anchor', 'middle').attr('fill', '#fff').attr('font-size', 11).text(r.ticker);
+        x += w;
+      });
+    });
+    let lx = labelW;
+    rows.forEach((r, i) => {
+      const g = svg.append('g').attr('transform', `translate(${lx},0)`);
+      g.append('rect').attr('x', 0).attr('y', 3).attr('width', 9).attr('height', 9).attr('rx', 2).attr('fill', palette[i % palette.length]);
+      g.append('text').attr('x', 12).attr('y', 8).attr('dy', '0.35em').attr('fill', 'var(--color-fg-muted)').attr('font-size', 10).text(r.ticker);
+      lx += 14 + 7 * String(r.ticker).length + 10;
+    });
+  });
+  dash.draw('plan_rules', (ul) => {
+    const rows = rowsOf('plan', ul, 'table'); if (!rows) return;
+    MS.clear(ul);
+    rows.filter((r) => !['headline', 'backtest', 'holdings'].includes(r.key)).forEach((r) => {
+      const li = document.createElement('li');
+      const dot = document.createElement('span'); dot.className = 'ms-rdot ' + (r.state || '');
+      const body = document.createElement('span'); const b = document.createElement('b'); b.textContent = (r.label || '') + ': '; body.appendChild(b); body.appendChild(document.createTextNode(r.value || ''));
+      li.appendChild(dot); li.appendChild(body); ul.appendChild(li);
+    });
+  });
+  dash.draw('plan_table', (tb) => {
+    const rows = rowsOf('plan', tb, 'table'); if (!rows) return;
+    MS.clear(tb);
+    rows.forEach((r) => {
+      const tr = document.createElement('tr'); tr.dataset.key = r.key;
+      [['label', 'Rule', 'ms-nolabel'], ['value', 'Where it stands'], ['detail', 'Detail']].forEach(([f, label, cls]) => { const td = document.createElement('td'); td.dataset.label = label; if (cls) td.className = cls; td.textContent = r[f] == null || r[f] === '' ? '—' : String(r[f]); tr.appendChild(td); });
+      tb.appendChild(tr);
+    });
+  });
+
   // ---------------------------------------------------------------- insights + scorecard strip
   ['sc_hit:hit_rate_fmt', 'sc_resolved:n_resolved', 'sc_pending:n_pending', 'sc_brier:brier_fmt'].forEach((s) => { const [n, f] = s.split(':'); textDraw(n, 'scorecard', f, { where: { group: 'All calls' } }); });
 

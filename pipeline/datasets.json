@@ -3,19 +3,69 @@
   "schedule": "Rebuilt each weekday morning before 6 AM Central by a scheduled Claude task from the GitHub data feed",
   "staleAfterHours": 80,
   "datasets": {
-    "summary": {"title": "Today's summary and scores", "description": "One row: regime light, dip-buy and heat scores, the rule-based action, headline prices and data status, computed by pipeline.py from the GitHub feed (Yahoo Finance/Stooq prices, FRED, Cboe)."},
-    "metrics": {"title": "The 50 signal metrics", "description": "Each metric's value, signal, 1-year percentile, reading and source, in eight layers; computed by pipeline.py from the raw data in the GitHub feed."},
-    "series": {"title": "Daily series, two years", "description": "Prices, moving averages, drawdowns, oscillators, volatility, breadth, credit, rates, liquidity, gas and the historical composite scores, one row per trading day for charts."},
-    "sectors": {"title": "Sector rotation table", "description": "Eleven S&P sector ETFs: returns and relative performance versus IVV over 1, 3, 6 and 12 months, rotation quadrant and z-score, from adjusted closes in the GitHub feed."},
-    "composite_parts": {"title": "Composite score components", "description": "How the regime light, dip-buy score and heat score were assembled today: each component's reading, weight and contribution."},
-    "backtest": {"title": "Score backtest by band", "description": "Average and median forward returns, share positive and edge versus all days, for QQQ and TQQQ* (actual from 2010, simulated 3x before) by dip- and heat-score band and horizon since 1999."},
-    "backtest_curve": {"title": "Strategy growth curves", "description": "Monthly growth of 100 since 2005 for QQQ, TQQQ* buy-and-hold and TQQQ* held only while QQQ is above its 200-day average."},
-    "backtest_stats": {"title": "Strategy statistics", "description": "CAGR, maximum drawdown, volatility and Sharpe ratio for each backtested strategy."},
-    "events": {"title": "Upcoming macro events", "description": "Next CPI, FOMC and payrolls dates from the Federal Reserve and BLS calendars, plus configured mega-cap earnings dates."},
-    "sources": {"title": "Data feed status", "description": "Status, last data date and fetch time of every source the GitHub Action pulled this morning (data/manifest.json)."},
-    "insights": {"title": "Today's ten insights", "description": "The ranked insights and actions Claude wrote this morning from the metrics, each with its category, metric ids and, where testable, the prediction and stated confidence."},
-    "insight_log": {"title": "Every past call and its outcome", "description": "All insights written so far with their predictions, scored hit or miss from the asset's open on the insight date to the close after the horizon, or pending."},
-    "scorecard": {"title": "Insight scorecard", "description": "Hit rate, average signed move and Brier score of the morning calls, overall and by horizon, category, confidence band and asset."},
-    "score_history": {"title": "Daily scores and what followed", "description": "Each morning's regime light, dip and heat scores with the QQQ return over the following 5, 10 and 20 sessions as they become known (live calibration)."}
+    "allocation": {
+      "title": "Recommended allocation",
+      "description": "One row per fund: the plan's target, the holdings on file marked to the last close, and the trade between them, computed by plan.py from the rules and the GitHub feed."
+    },
+    "plan": {
+      "title": "Plan rules, where they stand",
+      "description": "The drawdown episode, ladder tranche levels, 200-day reclaim gate, leveraged-sleeve size, reserve mix, intraday watch and the rolling backtest behind the rules, one row each."
+    },
+    "summary": {
+      "title": "Today's summary and scores",
+      "description": "One row: regime light, dip-buy and heat scores, the rule-based action, headline prices and data status, computed by pipeline.py from the GitHub feed (Yahoo Finance/Stooq prices, FRED, Cboe)."
+    },
+    "metrics": {
+      "title": "The 50 signal metrics",
+      "description": "Each metric's value, signal, 1-year percentile, reading and source, in eight layers; computed by pipeline.py from the raw data in the GitHub feed."
+    },
+    "series": {
+      "title": "Daily series, two years",
+      "description": "Prices, moving averages, drawdowns, oscillators, volatility, breadth, credit, rates, liquidity, gas and the historical composite scores, one row per trading day for charts."
+    },
+    "sectors": {
+      "title": "Sector rotation table",
+      "description": "Eleven S&P sector ETFs: returns and relative performance versus IVV over 1, 3, 6 and 12 months, rotation quadrant and z-score, from adjusted closes in the GitHub feed."
+    },
+    "composite_parts": {
+      "title": "Composite score components",
+      "description": "How the regime light, dip-buy score and heat score were assembled today: each component's reading, weight and contribution."
+    },
+    "backtest": {
+      "title": "Score backtest by band",
+      "description": "Average and median forward returns, share positive and edge versus all days, for QQQ and TQQQ* (actual from 2010, simulated 3x before) by dip- and heat-score band and horizon since 1999."
+    },
+    "backtest_curve": {
+      "title": "Strategy growth curves",
+      "description": "Monthly growth of 100 since 2005 for QQQ, TQQQ* buy-and-hold and TQQQ* held only while QQQ is above its 200-day average."
+    },
+    "backtest_stats": {
+      "title": "Strategy statistics",
+      "description": "CAGR, maximum drawdown, volatility and Sharpe ratio for each backtested strategy."
+    },
+    "events": {
+      "title": "Upcoming macro events",
+      "description": "Next CPI, FOMC and payrolls dates from the Federal Reserve and BLS calendars, plus configured mega-cap earnings dates."
+    },
+    "sources": {
+      "title": "Data feed status",
+      "description": "Status, last data date and fetch time of every source the GitHub Action pulled this morning (data/manifest.json)."
+    },
+    "insights": {
+      "title": "Today's ten insights",
+      "description": "The ranked insights and actions Claude wrote this morning from the metrics, each with its category, metric ids and, where testable, the prediction and stated confidence."
+    },
+    "insight_log": {
+      "title": "Every past call and its outcome",
+      "description": "All insights written so far with their predictions, scored hit or miss from the asset's open on the insight date to the close after the horizon, or pending."
+    },
+    "scorecard": {
+      "title": "Insight scorecard",
+      "description": "Hit rate, average signed move and Brier score of the morning calls, overall and by horizon, category, confidence band and asset."
+    },
+    "score_history": {
+      "title": "Daily scores and what followed",
+      "description": "Each morning's regime light, dip and heat scores with the QQQ return over the following 5, 10 and 20 sessions as they become known (live calibration)."
+    }
   }
 }

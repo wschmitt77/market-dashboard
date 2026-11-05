@@ -23,3 +23,12 @@ pip install -r fetch/requirements.txt
 python fetch/fetch_data.py            # ~5–10 minutes; writes data/raw and data/manifest.json
 python pipeline/pipeline.py --repo . --out out
 ```
+
+## Allocation plan
+
+`pipeline/allocation_backtest.py` tests the owner's plan — an unlevered ladder at 14/20/27% QQQ drawdowns, a leveraged
+sleeve sized by depth that opens only after two weekly closes above the 200-day, and a reserve of bills, Treasuries and
+gold — across the 2000, 2008, 2020 and 2022 bears and across rolling seven-year windows since 2000, with 2x/3x funds
+simulated before their inception. `pipeline/plan.py` applies the same rules to a private portfolio file (kept in the
+dashboard's store, never in this repo) and writes the "Recommended allocation" datasets the dashboard shows at the top.
+Starting amounts are command-line parameters; the defaults are placeholders. None of it is advice.

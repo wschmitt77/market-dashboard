@@ -30,10 +30,21 @@ with the values in the task prompt.
    python3 -I repo/pipeline/pipeline.py --repo repo --out out --stage finalize --insights out/insights_today.json --history <history.json>
    ```
 
+5b. **Recommended allocation** (the plan panel at the top of the page). Read the owner's portfolio document with
+   `ArtifactData get` (collection `plan`, doc_id `portfolio`) and save its content fields to `portfolio.json`
+   (`as_of`, `holdings`, `baseline`, `rules`, and `reserve_base` / `episode_start` / `notes` when present). Then
+   ```bash
+   python3 -I repo/pipeline/plan.py --repo repo --portfolio portfolio.json --out out
+   ```
+   which writes `out/allocation.json` and `out/plan.json` and prints the headline. The document is private to the
+   dashboard and holds the owner's figures: never copy it into the repo. Update it only when the owner reports a trade
+   (change `holdings`; `baseline` stays what was held when the drawdown episode began).
+
 6. **Upload the data files** as assets of the dashboard, one `Artifact` publish call per file with `asset: true`,
    `url` = dashboard URL and `file_path` = each of:
    `summary.json, metrics.json, series.json, sectors.json, composite_parts.json, backtest.json, backtest_curve.json,
-   backtest_stats.json, events.json, sources.json, insights.json, insight_log.json, scorecard.json, score_history.json, history.json`.
+   backtest_stats.json, events.json, sources.json, insights.json, insight_log.json, scorecard.json, score_history.json, history.json,
+   allocation.json, plan.json`.
    Collect each result's `url` (`/_blob/<id>`) into `out/assets.json` as `{"summary.json": "/_blob/...", ...}`.
 
 7. **Point the datasets at the new files.** Read the current documents with `ArtifactData list` (`collection`: `datasets`,
@@ -45,8 +56,9 @@ with the values in the task prompt.
    and send one `ArtifactData batch` whose `writes` is the array in `store_out/batch_writes.json` (each entry already
    carries `file_path` and `if_version`). If the batch reports a version conflict, list again and rebuild the writes.
 
-8. **Summarize for the owner** in three to five lines: regime light, dip and heat scores, the rule-based action, the top
-   three insights in one line each, and any data problem (stale feed, sources that failed). That summary is the push notification.
+8. **Summarize for the owner** in three to six lines: the plan headline (what the rules call for today) first, then the regime
+   light, dip and heat scores, the top three insights in one line each, and any data problem (stale feed, sources that failed).
+   That summary is the push notification.
 
 Run the repo's scripts with `python3 -I` (isolated mode): in automatic-approval sessions a plain `python3 repo/...` call on freshly cloned code can be blocked by the permission classifier as "code from external", and `-I` is also the safe way to run code that reads downloaded data.
 
