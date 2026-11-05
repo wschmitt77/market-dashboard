@@ -7,10 +7,10 @@ Build the dataset documents for the dashboard's store.
 assets.json maps file names to the asset urls returned by the uploads, e.g.
     {"summary.json": "/_blob/0123...", "history.json": "/_blob/abcd...", ...}
 
---store is the directory an `ArtifactData list` (collection "datasets", out_dir=...) saved the current documents to
-(store_dir/datasets/<id>.json). The saved files do not carry versions: copy the "version N" shown per document in the
-list output into a JSON file {"summary": 2, ...} and pass it as --versions. Each existing document then gets an "update"
-pinned to its version; a document with no saved file gets a full "set".
+--versions is a JSON file {"summary": 2, "metrics": 3, ...} with each existing document's version as the
+`ArtifactData list` output shows it (list without out_dir; the documents are printed inline). A document named there gets
+an "update" pinned to that version; one not named gets a full "set" that creates it. --store (a directory of saved
+documents) is accepted for compatibility but no longer needed.
 
 Writes <out>/<id>.json (one document payload each) and <out>/batch_writes.json: the `writes` array for an
 `ArtifactData batch` call, with file_path pointing at those payload files.
@@ -46,7 +46,9 @@ def main():
             print(f"skip {ds_id}: no asset url for {fname}")
             continue
         existing = None
-        if args.store:
+        if ds_id in versions:
+            existing = {"version": versions[ds_id]}
+        elif args.store:
             p = Path(args.store) / "datasets" / f"{ds_id}.json"
             if p.exists():
                 existing = json.loads(p.read_text())

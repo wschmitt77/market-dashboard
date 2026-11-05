@@ -37,10 +37,10 @@ with the values in the task prompt.
    Collect each result's `url` (`/_blob/<id>`) into `out/assets.json` as `{"summary.json": "/_blob/...", ...}`.
 
 7. **Point the datasets at the new files.** Read the current documents with `ArtifactData list` (`collection`: `datasets`,
-   `out_dir`: `store`). The result lists each document with its `version N`: write those into `store/versions.json` as
-   `{"summary": 2, "metrics": 2, ...}` (the saved files do not contain the version). Then
+   no `out_dir`; the documents print inline). Write each document's `version` into `store/versions.json` as
+   `{"summary": 4, "metrics": 4, ...}`. Then
    ```bash
-   python3 repo/pipeline/store_batch.py --assets out/assets.json --store store --versions store/versions.json --out store_out
+   python3 repo/pipeline/store_batch.py --assets out/assets.json --versions store/versions.json --out store_out
    ```
    and send one `ArtifactData batch` whose `writes` is the array in `store_out/batch_writes.json` (each entry already
    carries `file_path` and `if_version`). If the batch reports a version conflict, list again and rebuild the writes.
