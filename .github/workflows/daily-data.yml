@@ -54,10 +54,26 @@ jobs:
         if: always()
         env:
           MODE: ${{ github.event.inputs.mode || 'daily' }}
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -x
+          if [ "$MODE" = "intraday" ]; then
+            # write each snapshot file through the contents API: no local git state, no push races
+            for f in data/intraday/*; do
+              [ -f "$f" ] || continue
+              sha=$(gh api "repos/${GITHUB_REPOSITORY}/contents/$f?ref=${GITHUB_REF_NAME}" -q .sha 2>/dev/null || true)
+              b64=$(base64 -w0 "$f")
+              if [ -n "$sha" ]; then
+                gh api -X PUT "repos/${GITHUB_REPOSITORY}/contents/$f" -f message="intraday: $f $(date -u +%H:%MZ)" -f content="$b64" -f sha="$sha" -f branch="${GITHUB_REF_NAME}" >/dev/null
+              else
+                gh api -X PUT "repos/${GITHUB_REPOSITORY}/contents/$f" -f message="intraday: $f $(date -u +%H:%MZ)" -f content="$b64" -f branch="${GITHUB_REF_NAME}" >/dev/null
+              fi
+            done
+            exit 0
+          fi
           git config user.name "market-data-bot"
           git config user.email "market-data-bot@users.noreply.github.com"
-          if [ "$MODE" = "intraday" ]; then mkdir -p data/intraday && git add -A data/intraday; else git add -A data; fi
+          git add -A data
           if git diff --cached --quiet; then
             echo "No data changes."
             exit 0
