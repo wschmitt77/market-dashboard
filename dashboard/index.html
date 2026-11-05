@@ -113,7 +113,7 @@
       <div class="ms-plan-head">
         <div>
           <h3>Recommended allocation today</h3>
-          <p class="ms-note">Your plan's rules applied to the holdings on file: unlevered adds on a ladder of drawdown levels, a leveraged sleeve that opens only after QQQ reclaims its 200-day, and a reserve of bills, Treasuries and gold.</p>
+          <p class="ms-note">Your plan's rules applied to the holdings on file: exposure to the Nasdaq-100 scaled by its trend and volatility — 1.5× above the 200-day in calm markets, 1× when volatile, 0.5× below it, more after a deep bear is reclaimed — built from QQQ, a 2× fund and a defensive sleeve of bills, Treasuries and gold.</p>
         </div>
         <span class="ms-chip">closes through <span data-draw="plan_asof" data-source="plan" data-field="as_of" data-where="key=headline">—</span></span>
       </div>
@@ -134,7 +134,7 @@
         <div class="ms-table-wrap"><table class="ms-stack" data-source="plan" data-row-key="key">
           <thead><tr><th data-field="label">Rule</th><th data-field="value">Where it stands</th><th data-field="detail">Detail</th></tr></thead>
           <tbody data-draw="plan_table"></tbody></table></div>
-        <p class="ms-note">The ladder buys QQQ/IVV 2/3–1/3 at 14%, 20% and 27% QQQ drawdowns (or 7/10/15% for IVV), each tranche 23% of the reserve held when the episode began. The leveraged sleeve (QLD, or TQQQ at two-thirds of the dollars) is sized by the deepest close of the episode — 15% at −15%, 30% at −25%, 45% at −35%, 75% at −50% — bought only after two weekly closes above the 200-day with realized vol under 45%, sold on a weekly close 3% below it, cut back as the drawdown closes. The reserve is 60% T-bills, 20% IEF, 20% GLD. These are the owner's rules read mechanically from the closes, not advice; the evidence row shows how they did across rolling seven-year windows since 2000, in-sample.</p>
+        <p class="ms-note">Decisions are taken on weekly closes. Target exposure is 1.5× when QQQ is above its 200-day with 20-day realized volatility under 30%, 1.0× above it with higher volatility, 0.5× once a weekly close lands 3% below it (back to the full target on a weekly close above it), plus 0.5× after a bear of 25% or more once two weekly closes are back above the 200-day, until the drawdown is inside −10%; no leverage at all when volatility reaches 60%. Exposure above 1× is built with QLD (or half as many dollars of TQQQ) on top of the QQQ/IVV core; below 1× the rest sits in a defensive sleeve of 60% T-bills, 20% IEF, 20% GLD. Rebalance when the live exposure drifts more than 10 points from the target. These are the owner's rules read mechanically from the closes, not advice; the evidence row shows how they did across rolling seven-year windows since 2000, in-sample, with the 2× fund simulated before 2006 and no taxes.</p>
       </details>
     </div>
   </section>

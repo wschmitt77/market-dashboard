@@ -38,9 +38,12 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pipeline as P  # noqa: E402
 import allocation_backtest as AB  # noqa: E402
+import exposure_backtest as X  # noqa: E402
 
 DEFAULT_RULES = {"tranche_frac": 0.23, "vehicle": "QLD", "reserve_mix": {"tbill": 0.6, "bond": 0.2, "gold": 0.2},
                  "sizing": AB.SIZING_50, "ladder": AB.LADDER, "fund_core": True}
+EXPOSURE_RULES = {"plan": "exposure", "e_hi": 1.5, "e_mid": 1.0, "e_lo": 0.5, "vol_hi": 30.0, "vol_crash": 60.0, "exit_pct": 0.03, "reclaim_bonus": 0.5,
+                  "reclaim_depth": -0.25, "band": 0.10, "vehicle": "QLD", "defensive_mix": {"tbill": 0.6, "bond": 0.2, "gold": 0.2}}
 VEHICLE_LEV = {"QLD": 2.0, "TQQQ": 3.0}
 FUND_NAME = {"IVV": "iShares Core S&P 500", "QQQ": "Invesco Nasdaq-100", "QLD": "ProShares Ultra QQQ (2x)", "TQQQ": "ProShares UltraPro QQQ (3x)",
              "TBILL": "T-bills / money market (SGOV, BIL)", "IEF": "iShares 7–10 Year Treasury", "GLD": "SPDR Gold"}
@@ -97,6 +100,8 @@ def sleeve_state(D: dict, i0: int, i1: int, sizing, exposure_scale: float) -> di
 
 
 def build(repo: Path, portfolio: dict, run_backtest: bool = True) -> tuple[list[dict], list[dict]]:
+    if (portfolio.get("rules") or {}).get("plan") == "exposure":
+        return build_exposure(repo, portfolio, run_backtest)
     rules = dict(DEFAULT_RULES)
     rules.update(portfolio.get("rules") or {})
     sizing = [tuple(x) for x in rules["sizing"]]
@@ -310,6 +315,179 @@ def build(repo: Path, portfolio: dict, run_backtest: bool = True) -> tuple[list[
     if intraday:
         plan.append({"key": "intraday", "label": "Intraday watch", "value": intraday, "detail": "Rules act on closes; this is where the open session stands.", "state": "warn"})
     if bt:
+        plan.append({"key": "backtest", "label": "Evidence", "value": bt, "detail": "", "state": ""})
+    plan.append({"key": "holdings", "label": "Holdings on file", "value": ", ".join(f"{t} {usd(v)}" for t, v in held.items() if v > 0) + f" (as of {as_of.date()}, marked to {last.date()})",
+                 "detail": "Tell Claude when you trade and the file is updated; the trade column then clears.", "state": ""})
+    for r in plan:
+        r["as_of"] = last.date().isoformat()
+    return rows, plan
+
+
+def build_exposure(repo: Path, portfolio: dict, run_backtest: bool = True) -> tuple[list[dict], list[dict]]:
+    """Trend- and volatility-scaled exposure to the Nasdaq-100 (see exposure_backtest.py)."""
+    rules = dict(EXPOSURE_RULES)
+    rules.update(portfolio.get("rules") or {})
+    vehicle = rules["vehicle"] if rules["vehicle"] in VEHICLE_LEV else "QLD"
+    lev = VEHICLE_LEV[vehicle]
+    other_lev = "TQQQ" if vehicle == "QLD" else "QLD"
+    mix = rules["defensive_mix"]
+    data = P.Data(repo)
+    D = X.load(repo, "QQQ")
+    idx = D["idx"]
+    i1 = len(idx) - 1
+    last = idx[i1]
+    qqq_last, sma200, rv, dd_last, hi = float(D["qqq"][i1]), float(D["sma200_a"][i1]), float(D["rv_a"][i1]), float(D["dd_a"][i1]), float(D["hi2y"][i1])
+    hi_date = idx[int(np.argmax(D["qqq"][max(0, i1 - 503):i1 + 1])) + max(0, i1 - 503)]
+    # decision days: the last trading day of each week, plus the day the plan started (its entry check)
+    wk = idx.isocalendar().week.values
+    mask = np.r_[wk[1:] != wk[:-1], last.weekday() == 4]
+    plan_start = pd.Timestamp(portfolio.get("plan_start")) if portfolio.get("plan_start") else None
+    if plan_start is not None:
+        j = idx.get_indexer([plan_start], method="bfill")[0]
+        if j >= 0:
+            mask[j] = True
+    params = {k: rules[k] for k in ("e_hi", "e_mid", "e_lo", "vol_hi", "vol_crash", "exit_pct", "reclaim_bonus", "reclaim_depth")}
+    i0 = max(0, i1 - 756)
+    st = X.replay_state(D, i0, i1, decision_mask=mask, **params)
+    target = float(st["target"] if st["target"] is not None else rules["e_lo"])
+    decided_on = st["last_decision"].date() if st["last_decision"] is not None else None
+    # ---- holdings marked to the last close
+    closes = {t: data.close(t) for t in ("IVV", "QQQ", "QLD", "TQQQ", "IEF", "GLD")}
+    as_of = pd.Timestamp(portfolio.get("as_of") or last)
+    tbill = D["tbd"]
+
+    def mtm(h: dict) -> dict:
+        out = {}
+        for t, v in (h or {}).items():
+            v = float(v or 0)
+            if t == "TBILL":
+                j0 = idx.get_indexer([as_of], method="ffill")[0]
+                out[t] = v * float(np.prod(1 + tbill[j0 + 1:i1 + 1])) if j0 < i1 else v
+            elif closes.get(t) is not None and len(closes[t]):
+                sr = closes[t]
+                p0 = float(sr[:as_of].iloc[-1]) if len(sr[:as_of]) else float(sr.iloc[-1])
+                out[t] = v / p0 * float(sr.iloc[-1])
+            else:
+                out[t] = v
+        return out
+
+    held = mtm(portfolio.get("holdings") or {})
+    total = sum(held.values()) or 1.0
+    live_exposure = (held.get("IVV", 0) + held.get("QQQ", 0) + 2 * held.get("QLD", 0) + 3 * held.get("TQQQ", 0)) / total
+    # ---- provisional read from the open session, if newer than the last close
+    prov = None
+    try:
+        q = json.loads((repo / "data" / "intraday" / "quotes.json").read_text())
+        qq = next((x for x in q.get("quotes", []) if x.get("symbol") == "QQQ"), None)
+        if qq and qq.get("session") and pd.Timestamp(qq["session"]) > last:
+            p = float(qq["last"])
+            logs = np.diff(np.log(D["qqq"][i1 - 19:i1 + 1]))
+            rv_prov = float(np.std(np.r_[logs, math.log(p / qqq_last)], ddof=1) * math.sqrt(252) * 100)
+            trend_up = st["trend_up"]
+            if trend_up and p < sma200 * (1 - rules["exit_pct"]):
+                trend_up = False
+            elif not trend_up and p > sma200:
+                trend_up = True
+            if trend_up:
+                t_prov = rules["e_hi"] if rv_prov < rules["vol_hi"] else rules["e_mid"]
+                why = f"above the 200-day; realized vol {rv_prov:.0f}% {'under' if rv_prov < rules['vol_hi'] else 'at or above'} {rules['vol_hi']:.0f}%"
+            else:
+                t_prov = rules["e_lo"]
+                why = f"below the 200-day exit line ({sma200 * (1 - rules['exit_pct']):.2f})"
+            if rv_prov >= rules["vol_crash"]:
+                t_prov = min(t_prov, rules["e_lo"]); why += f"; vol {rv_prov:.0f}% ≥ {rules['vol_crash']:.0f}%: no leverage"
+            is_decision_day = pd.Timestamp(qq["session"]).weekday() == 4 or (plan_start is not None and pd.Timestamp(qq["session"]) == plan_start)
+            prov = {"price": p, "as_of": qq["as_of_et"], "chg": float(qq["chg_pct"]), "dd": p / hi - 1, "rv": rv_prov, "target": float(t_prov), "why": why, "decision_day": is_decision_day, "session": qq["session"]}
+    except Exception:  # noqa: BLE001
+        prov = None
+    # the headline follows the provisional read when today is a decision day (Friday, or the plan's first day) and the
+    # session is newer than the last close; otherwise the standing weekly target
+    use_prov = prov is not None and prov["decision_day"]
+    E = prov["target"] if use_prov else target
+    # ---- dollar targets
+    if E >= 1.0:
+        lev_share = min(1.0, (E - 1.0) / (lev - 1.0)); core_share = 1.0 - lev_share; def_share = 0.0
+    else:
+        lev_share, core_share, def_share = 0.0, E, 1.0 - E
+    core_usd = core_share * total
+    ivv_t = min(held.get("IVV", 0.0), core_usd)  # IVV stays as part of the 1x core; new core money goes to QQQ
+    qqq_t = core_usd - ivv_t
+    target_usd = {"IVV": ivv_t, "QQQ": qqq_t, vehicle: lev_share * total, "TBILL": def_share * total * mix.get("tbill", 0), "IEF": def_share * total * mix.get("bond", 0), "GLD": def_share * total * mix.get("gold", 0)}
+    if held.get(other_lev, 0) > 0:
+        target_usd[other_lev] = 0.0
+    rows = []
+    for t in ["IVV", "QQQ", vehicle, other_lev, "TBILL", "IEF", "GLD"]:
+        if t not in target_usd:
+            continue
+        tg, hd = target_usd[t], held.get(t, 0.0)
+        tr = tg - hd
+        note = ""
+        if t == vehicle:
+            alt = lev_share * total * (lev - 1) / (VEHICLE_LEV[other_lev] - 1)
+            note = (f"{lev_share * 100:.0f}% of the portfolio in the 2x fund = {E:.2f}x total exposure; or {usd(alt)} of {other_lev} with the rest in QQQ" if lev_share > 0 else
+                    f"no leverage at {E:.2f}x; leverage returns at {rules['e_hi']:.1f}x when QQQ is above its 200-day with realized vol under {rules['vol_hi']:.0f}%")
+        elif t == "IVV":
+            note = "kept as part of the 1x core; the tested plan's core is QQQ, so new core money goes to QQQ"
+        elif t == "QQQ":
+            note = f"core equity {core_share * 100:.0f}% of the portfolio" + ("" if core_share >= 1 else f" ({E:.2f}x exposure below 1 leaves the rest defensive)")
+        elif t in ("TBILL", "IEF", "GLD"):
+            w = {"TBILL": mix.get("tbill", 0), "IEF": mix.get("bond", 0), "GLD": mix.get("gold", 0)}[t]
+            note = f"{w * 100:.0f}% of the defensive sleeve ({def_share * 100:.0f}% of the portfolio)"
+        rows.append({"ticker": t, "name": FUND_NAME.get(t, t), "role": "core" if t in ("IVV", "QQQ") else ("leverage" if t in VEHICLE_LEV else "defensive"),
+                     "target_usd": round(tg), "held_usd": round(hd), "trade_usd": round(tr), "target_pct": round(tg / total * 100, 1), "held_pct": round(hd / total * 100, 1),
+                     "target_fmt": usd(tg), "held_fmt": usd(hd), "trade_fmt": ("buy " if tr > 0 else "sell ") + usd(abs(tr)) if abs(tr) >= 1000 else "—",
+                     "target_pct_fmt": pct(tg / total * 100, 0), "held_pct_fmt": pct(hd / total * 100, 0), "note": note})
+    trades = [(r["ticker"], r["trade_usd"]) for r in rows if abs(r["trade_usd"]) >= 1000]
+    defensive_keys = ("TBILL", "IEF", "GLD")
+    core_tr = [(t, v) for t, v in trades if t not in defensive_keys]
+    def_tr = [(t, v) for t, v in trades if t in defensive_keys]
+    basis = (f"provisional on today's {prov['as_of'][-5:]} ET price, final at the close" if use_prov else f"set at the {decided_on} close")
+
+    def phrase(tr):
+        b = [f"{usd(v)} {t}" for t, v in tr if v > 0]
+        s_ = [f"{usd(-v)} {t}" for t, v in tr if v < 0]
+        return (("buy " + ", ".join(b)) if b else "") + ("; " if b and s_ else "") + (("sell " + ", ".join(s_)) if s_ else "")
+
+    if core_tr:
+        headline = f"Move to {E:.2f}x exposure ({basis}): {phrase(core_tr)}" + (f"; defensive sleeve: {phrase(def_tr)}" if def_tr else "") + "."
+    elif def_tr:
+        headline = f"Hold at {E:.2f}x exposure ({basis}); defensive sleeve: {phrase(def_tr)}."
+    else:
+        headline = f"Hold at {E:.2f}x exposure ({basis}); live exposure {live_exposure:.2f}x."
+    # ---- rule rows
+    s200_exit = sma200 * (1 - rules["exit_pct"])
+    plan = [{"key": "headline", "label": "Today", "value": headline,
+             "detail": f"Decisions are taken on weekly closes (and on the plan's first day); the target then holds until the next weekly close moves it more than {rules['band'] * 100:.0f} points. Holdings on file as of {as_of.date()}.",
+             "state": "warn" if trades else "ok"},
+            {"key": "exposure", "label": "Exposure", "value": f"Target {E:.2f}x" + (" (provisional: today's close decides)" if use_prov else "") + f" · live {live_exposure:.2f}x" + (f" · previous weekly target {target:.2f}x (set {decided_on})" if use_prov and decided_on else ""),
+             "detail": f"Ladder of targets: {rules['e_hi']:.1f}x above the 200-day with 20-day realized vol under {rules['vol_hi']:.0f}%; {rules['e_mid']:.1f}x above it with higher vol; {rules['e_lo']:.1f}x below it; +{rules['reclaim_bonus']:.2f} after a {abs(rules['reclaim_depth']) * 100:.0f}% bear is reclaimed, until the drawdown closes to −10%; no leverage when vol ≥ {rules['vol_crash']:.0f}%.",
+             "state": "ok" if E > 1 else ("warn" if E >= 1 else "bad")},
+            {"key": "trend", "label": "Trend test (QQQ vs 200-day)",
+             "value": f"Last close {qqq_last:.2f} vs 200-day {sma200:.1f} ({(qqq_last / sma200 - 1) * 100:+.1f}%): {'up' if st['trend_up'] else 'down'}; weekly closes above so far: {st['wk_above']}",
+             "detail": f"While up, a weekly close below {s200_exit:.2f} (3% under the 200-day) turns it down; while down, a weekly close above the 200-day turns it up. {st['reason']}.",
+             "state": "ok" if st["trend_up"] else "bad"},
+            {"key": "vol", "label": "Volatility gate", "value": f"20-day realized vol {rv:.0f}% (leverage needs under {rules['vol_hi']:.0f}%; everything but the {rules['e_lo']:.1f}x floor is off at {rules['vol_crash']:.0f}%+)",
+             "detail": "Volatility drag and whipsaw losses on leveraged funds grow with the square of volatility; the tests kept leverage only in calm uptrends.", "state": "ok" if rv < rules["vol_hi"] else ("warn" if rv < rules["vol_crash"] else "bad")},
+            {"key": "episode", "label": "Drawdown episode", "value": f"QQQ {dd_last * 100:.1f}% from its 2-year high ({hi:.2f} on {hi_date.date()}); deepest close this episode {st['deepest'] * 100:.1f}%" + ("; reclaim bonus on" if st["reclaim_on"] else ""),
+             "detail": f"After a close {abs(rules['reclaim_depth']) * 100:.0f}% or more below the high, two weekly closes back above the 200-day add +{rules['reclaim_bonus']:.2f}x until the drawdown is inside −10%.",
+             "state": "bad" if dd_last <= -0.2 else ("warn" if dd_last <= -0.1 else "")},
+            {"key": "defensive", "label": "Defensive sleeve", "value": f"{def_share * 100:.0f}% of the portfolio ({usd(def_share * total)}) as {mix.get('tbill', 0) * 100:.0f}% T-bills, {mix.get('bond', 0) * 100:.0f}% IEF, {mix.get('gold', 0) * 100:.0f}% GLD",
+             "detail": "Held whenever exposure is below 1x; it is what gets redeployed when the trend turns back up.", "state": ""}]
+    if prov is not None:
+        plan.append({"key": "intraday", "label": "Intraday watch" + (" — decision day" if prov["decision_day"] else ""),
+                     "value": f"QQQ {prov['price']:.2f} at {prov['as_of'][-5:]} ET ({prov['chg']:+.1f}% on the day), {prov['dd'] * 100:.1f}% from the high, {'above' if prov['price'] > sma200 else 'below'} the 200-day ({sma200:.1f}); provisional vol {prov['rv']:.0f}% → target {prov['target']:.2f}x ({prov['why']})",
+                     "detail": ("Today's close sets the target." if prov["decision_day"] else "Not a decision day: the standing target holds until this week's close."), "state": "warn"})
+    if run_backtest:
+        try:
+            starts, hz = X.windows(D, 7)
+            kw = dict(e_hi=rules["e_hi"], e_mid=rules["e_mid"], e_lo=rules["e_lo"], vol_hi=rules["vol_hi"], exit_pct=rules["exit_pct"], reclaim_bonus=rules["reclaim_bonus"], reclaim_depth=rules["reclaim_depth"], lev=lev, defensive=mix, band=rules["band"], vol_crash=rules["vol_crash"])
+            c, m, f, e = X.rolling(D, starts, hz, **kw)
+            qc = X.rolling(D, starts, hz, constant=1.0); sc = X.rolling(D, starts, hz, core="S", constant=1.0)
+            bt = (f"{len(starts)} rolling 7-year windows ({idx[starts[0]].date()} to {idx[starts[-1]].date()} starts): rules median {np.median(c):.1f}% a year vs QQQ {np.median(qc[0]):.1f}% and SPY {np.median(sc[0]):.1f}%; "
+                  f"ahead of QQQ in {(c > qc[0]).mean() * 100:.0f}% of windows (median +{np.median(c - qc[0]):.1f}%/yr) and of SPY in {(c > sc[0]).mean() * 100:.0f}%; 10th-percentile {np.percentile(c, 10):.1f}% vs QQQ {np.percentile(qc[0], 10):.1f}%; "
+                  f"worst window {f.min():+.0f}% vs QQQ {qc[2].min():+.0f}%; worst drawdown {m.min():.0f}% vs QQQ {qc[1].min():.0f}%. In-sample; 2x fund simulated before 2006; no taxes.")
+        except Exception as e:  # noqa: BLE001
+            bt = f"Backtest line unavailable: {type(e).__name__}"
         plan.append({"key": "backtest", "label": "Evidence", "value": bt, "detail": "", "state": ""})
     plan.append({"key": "holdings", "label": "Holdings on file", "value": ", ".join(f"{t} {usd(v)}" for t, v in held.items() if v > 0) + f" (as of {as_of.date()}, marked to {last.date()})",
                  "detail": "Tell Claude when you trade and the file is updated; the trade column then clears.", "state": ""})
