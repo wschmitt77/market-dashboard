@@ -5,6 +5,11 @@ on:
     # 10:15 UTC = 5:15 AM Central (CDT) / 4:15 AM (CST), every day; the 6 AM dashboard job reads the result.
     - cron: "15 10 * * *"
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "daily (all sources) or intraday (5-minute snapshot of the core tickers)"
+        required: false
+        default: "daily"
   push:
     branches: [main, master]
     paths:
@@ -41,7 +46,9 @@ jobs:
         continue-on-error: true
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python fetch/fetch_data.py
+          MODE: ${{ github.event.inputs.mode || 'daily' }}
+        run: |
+          if [ "$MODE" = "intraday" ]; then python fetch/fetch_data.py intraday; else python fetch/fetch_data.py; fi
 
       - name: Commit data
         if: always()

@@ -947,10 +947,82 @@ def fetch_calendar() -> None:
            error="; ".join(cal["notes"]) if cal["notes"] else None)
 
 
+# ----------------------------------------------------------------------------- intraday snapshot (on demand)
+def fetch_intraday() -> None:
+    """Latest 5-minute bars for the core tickers, sectors, ratios and indices: an intraday snapshot written to data/intraday/."""
+    import yfinance as yf  # noqa: WPS433
+    syms = list(dict.fromkeys(CONFIG["core_tickers"] + list(CONFIG["sector_etfs"]) + CONFIG["ratio_tickers"] + ["^VIX", "^VXN", "^NDX", "^GSPC", "^TNX", "CL=F", "DX-Y.NYB"]))
+    out_dir = ROOT / "data" / "intraday"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    df = yf.download(syms, period="5d", interval="5m", prepost=False, group_by="ticker", threads=True, progress=False, auto_adjust=False, timeout=30)
+    if df is None or df.empty:
+        raise RuntimeError("no intraday data returned")
+    multi = isinstance(df.columns, pd.MultiIndex)
+    quotes = []
+    bars = {}
+    for sym in syms:
+        try:
+            sub = df[sym] if multi else df
+        except KeyError:
+            continue
+        sub = sub.dropna(subset=["Close"])
+        if sub.empty:
+            continue
+        idx = pd.to_datetime(sub.index)
+        try:
+            idx_et = idx.tz_convert(ET)
+        except TypeError:
+            idx_et = idx.tz_localize("UTC").tz_convert(ET)
+        sub = sub.copy()
+        sub.index = idx_et
+        last_day = sub.index[-1].date()
+        today = sub[sub.index.date == last_day]
+        prev = sub[sub.index.date < last_day]
+        prev_close = float(prev["Close"].iloc[-1]) if len(prev) else None
+        # the daily file's last close is the authoritative previous close when it predates the session
+        daily = RAW / "prices" / f"{sym.replace('^', '_')}.csv"
+        if daily.exists():
+            try:
+                d = pd.read_csv(daily)
+                d = d[d["date"] < last_day.isoformat()]
+                if len(d):
+                    prev_close = float(d["close"].iloc[-1])
+            except Exception:  # noqa: BLE001
+                pass
+        last = float(today["Close"].iloc[-1])
+        quotes.append({"symbol": sym, "session": last_day.isoformat(), "as_of_et": today.index[-1].strftime("%Y-%m-%d %H:%M"),
+                       "last": round(last, 4), "open": round(float(today["Open"].iloc[0]), 4), "high": round(float(today["High"].max()), 4),
+                       "low": round(float(today["Low"].min()), 4), "volume": float(today["Volume"].sum()) if "Volume" in today.columns else None,
+                       "prev_close": None if prev_close is None else round(prev_close, 4),
+                       "chg_pct": None if not prev_close else round((last / prev_close - 1) * 100, 3),
+                       "from_high_pct": round((last / float(today["High"].max()) - 1) * 100, 3),
+                       "off_low_pct": round((last / float(today["Low"].min()) - 1) * 100, 3)})
+        if sym in ("QQQ", "TQQQ", "IVV", "SPY", "^VIX", "SMH", "XLK", "XLE"):
+            bars[sym] = today[["Open", "High", "Low", "Close", "Volume"]].reset_index().rename(columns={"index": "time", "Datetime": "time"})
+    if not quotes:
+        raise RuntimeError("no symbols parsed from intraday data")
+    (out_dir / "quotes.json").write_text(json.dumps({"fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "quotes": quotes}, indent=1))
+    for sym, b in bars.items():
+        b.columns = [str(c).lower() for c in b.columns]
+        b["time"] = pd.to_datetime(b["time"]).dt.strftime("%Y-%m-%d %H:%M")
+        b.to_csv(out_dir / f"{sym.replace('^', '_')}_5m.csv", index=False)
+    record("intraday/snapshot", "ok", symbols=len(quotes), as_of=quotes[0]["as_of_et"])
+
+
 # ----------------------------------------------------------------------------- main
 def main(argv: list[str]) -> int:
     only = set(a for a in argv[1:] if not a.startswith("-"))
     RAW.mkdir(parents=True, exist_ok=True)
+    if "intraday" in only:
+        try:
+            LOG_PATH.write_text("")
+        except Exception:  # noqa: BLE001
+            pass
+        guarded("intraday/snapshot", fetch_intraday, budget=240)
+        (ROOT / "data" / "intraday" / "manifest.json").write_text(json.dumps(MANIFEST, indent=1))
+        log("intraday snapshot done")
+        sys.stdout.flush()
+        os._exit(0)
 
     tickers = list(dict.fromkeys(CONFIG["core_tickers"] + list(CONFIG["sector_etfs"]) + CONFIG["ratio_tickers"]
                                  + CONFIG.get("yahoo_indices", [])))
