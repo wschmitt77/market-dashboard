@@ -8,7 +8,7 @@ Writes out/allocation.json (one row per fund: target, held, trade) and out/plan.
 The portfolio file is private (it lives in the dashboard's store, not in the repo):
 
     {"as_of": "2026-11-04",
-     "holdings": {"IVV": 500000, "QQQ": 0, "QLD": 0, "TQQQ": 0, "TBILL": 650000, "IEF": 0, "GLD": 0},   # dollars on as_of
+     "holdings": {"IVV": 100000, "QQQ": 0, "QLD": 0, "TQQQ": 0, "TBILL": 100000, "IEF": 0, "GLD": 0},   # dollars on as_of (example)
      "baseline": {... the same shape: what was held when the current drawdown episode began ...},
      "rules": {"tranche_frac": 0.23, "vehicle": "QLD", "reserve_mix": {"tbill": 0.6, "bond": 0.2, "gold": 0.2}}}
 
