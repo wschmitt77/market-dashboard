@@ -1,226 +1,226 @@
-[17:40:23] fetch start; 31 tickers, 34 FRED series
-[17:40:27]    (prices/bulk took 4.5s)
-[17:40:27] yfinance bulk: 31/31 tickers
-[17:40:27] prices/QQQ: ok source=yfinance rows=6958 last_date=2026-11-04
-[17:40:27]    (prices/QQQ took 0.0s)
-[17:40:27] prices/IVV: ok source=yfinance rows=6655 last_date=2026-11-04
-[17:40:27]    (prices/IVV took 0.0s)
-[17:40:27] prices/TQQQ: ok source=yfinance rows=4209 last_date=2026-11-04
-[17:40:27]    (prices/TQQQ took 0.0s)
-[17:40:27] prices/SPY: ok source=yfinance rows=8500 last_date=2026-11-04
-[17:40:27]    (prices/SPY took 0.0s)
-[17:40:27] prices/XLK: ok source=yfinance rows=7010 last_date=2026-11-04
-[17:40:27]    (prices/XLK took 0.0s)
-[17:40:27] prices/XLY: ok source=yfinance rows=7010 last_date=2026-11-04
-[17:40:27]    (prices/XLY took 0.0s)
-[17:40:28] prices/XLC: ok source=yfinance rows=2107 last_date=2026-11-04
-[17:40:28]    (prices/XLC took 0.0s)
-[17:40:28] prices/XLF: ok source=yfinance rows=7010 last_date=2026-11-04
-[17:40:28]    (prices/XLF took 0.0s)
-[17:40:28] prices/XLV: ok source=yfinance rows=7010 last_date=2026-11-04
-[17:40:28]    (prices/XLV took 0.0s)
-[17:40:28] prices/XLI: ok source=yfinance rows=7010 last_date=2026-11-04
-[17:40:28]    (prices/XLI took 0.0s)
-[17:40:28] prices/XLE: ok source=yfinance rows=7010 last_date=2026-11-04
-[17:40:28]    (prices/XLE took 0.0s)
-[17:40:28] prices/XLP: ok source=yfinance rows=7010 last_date=2026-11-04
-[17:40:28]    (prices/XLP took 0.0s)
-[17:40:28] prices/XLU: ok source=yfinance rows=7010 last_date=2026-11-04
-[17:40:28]    (prices/XLU took 0.0s)
-[17:40:28] prices/XLRE: ok source=yfinance rows=2785 last_date=2026-11-04
-[17:40:28]    (prices/XLRE took 0.0s)
-[17:40:28] prices/XLB: ok source=yfinance rows=7010 last_date=2026-11-04
-[17:40:28]    (prices/XLB took 0.0s)
-[17:40:28] prices/RSP: ok source=yfinance rows=5917 last_date=2026-11-04
-[17:40:28]    (prices/RSP took 0.0s)
-[17:40:28] prices/QQQE: ok source=yfinance rows=3678 last_date=2026-11-04
-[17:40:28]    (prices/QQQE took 0.0s)
-[17:40:28] prices/SPHB: ok source=yfinance rows=3965 last_date=2026-11-04
-[17:40:28]    (prices/SPHB took 0.0s)
-[17:40:28] prices/SPLV: ok source=yfinance rows=3899 last_date=2026-11-04
-[17:40:28]    (prices/SPLV took 0.0s)
-[17:40:28] prices/SMH: ok source=yfinance rows=6645 last_date=2026-11-04
-[17:40:28]    (prices/SMH took 0.0s)
-[17:40:28] prices/IWM: ok source=yfinance rows=6650 last_date=2026-11-04
-[17:40:28]    (prices/IWM took 0.0s)
-[17:40:28] prices/HYG: ok source=yfinance rows=4925 last_date=2026-11-04
-[17:40:28]    (prices/HYG took 0.0s)
-[17:40:28] prices/IEF: ok source=yfinance rows=6107 last_date=2026-11-04
-[17:40:28]    (prices/IEF took 0.0s)
-[17:40:28] prices/UUP: ok source=yfinance rows=4953 last_date=2026-11-04
-[17:40:28]    (prices/UUP took 0.0s)
-[17:40:28] prices/TLT: ok source=yfinance rows=6107 last_date=2026-11-04
-[17:40:28]    (prices/TLT took 0.0s)
-[17:40:28] prices/GLD: ok source=yfinance rows=5525 last_date=2026-11-04
-[17:40:28]    (prices/GLD took 0.0s)
-[17:40:28] prices/^VIX: ok source=yfinance rows=9281 last_date=2026-11-04
-[17:40:28]    (prices/^VIX took 0.0s)
-[17:40:28] prices/^VXN: ok source=yfinance rows=6485 last_date=2026-11-04
-[17:40:28]    (prices/^VXN took 0.0s)
-[17:40:28] prices/^NDX: ok source=yfinance rows=10354 last_date=2026-11-04
-[17:40:28]    (prices/^NDX took 0.1s)
-[17:40:28] prices/^GSPC: ok source=yfinance rows=24829 last_date=2026-11-04
-[17:40:28]    (prices/^GSPC took 0.1s)
-[17:40:28] prices/^MOVE: ok source=yfinance rows=5930 last_date=2026-11-04
-[17:40:28]    (prices/^MOVE took 0.0s)
-[17:40:28] FRED via fredgraph.csv (no FRED_API_KEY secret set)
-[17:40:45] fred/DGS10: kept_previous 
-[17:40:45]    error: fredgraph: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-[17:40:45]    (fred/DGS10 took 16.6s)
-[17:41:02] fred/DGS2: kept_previous 
-[17:41:02]    error: fredgraph: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-[17:41:02]    (fred/DGS2 took 16.6s)
-[17:41:18] fred/DGS1: kept_previous 
-[17:41:18]    error: fredgraph: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-[17:41:18]    (fred/DGS1 took 16.6s)
-[17:41:18] fred/DGS6MO: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/DGS6MO took 0.0s)
-[17:41:18] fred/DGS3MO: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/DGS3MO took 0.0s)
-[17:41:18] fred/DTB3: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/DTB3 took 0.0s)
-[17:41:18] fred/DFII10: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/DFII10 took 0.0s)
-[17:41:18] fred/T10Y2Y: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/T10Y2Y took 0.0s)
-[17:41:18] fred/T10Y3M: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/T10Y3M took 0.0s)
-[17:41:18] fred/T10YIE: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/T10YIE took 0.0s)
-[17:41:18] fred/T5YIFR: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/T5YIFR took 0.0s)
-[17:41:18] fred/BAMLH0A0HYM2: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/BAMLH0A0HYM2 took 0.0s)
-[17:41:18] fred/BAMLC0A0CM: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/BAMLC0A0CM took 0.0s)
-[17:41:18] fred/VIXCLS: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/VIXCLS took 0.0s)
-[17:41:18] fred/DTWEXBGS: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/DTWEXBGS took 0.0s)
-[17:41:18] fred/DCOILWTICO: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/DCOILWTICO took 0.0s)
-[17:41:18] fred/DFF: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/DFF took 0.0s)
-[17:41:18] fred/WALCL: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/WALCL took 0.0s)
-[17:41:18] fred/WTREGEN: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/WTREGEN took 0.0s)
-[17:41:18] fred/RRPONTSYD: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/RRPONTSYD took 0.0s)
-[17:41:18] fred/NFCI: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/NFCI took 0.0s)
-[17:41:18] fred/ICSA: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/ICSA took 0.0s)
-[17:41:18] fred/CCSA: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/CCSA took 0.0s)
-[17:41:18] fred/UMCSENT: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/UMCSENT took 0.0s)
-[17:41:18] fred/MICH: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/MICH took 0.0s)
-[17:41:18] fred/GASREGW: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/GASREGW took 0.0s)
-[17:41:18] fred/CPIAUCSL: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/CPIAUCSL took 0.0s)
-[17:41:18] fred/CPILFESL: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/CPILFESL took 0.0s)
-[17:41:18] fred/PCEPILFE: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/PCEPILFE took 0.0s)
-[17:41:18] fred/UNRATE: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/UNRATE took 0.0s)
-[17:41:18] fred/PAYEMS: kept_previous 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/PAYEMS took 0.0s)
-[17:41:18] fred/SP500: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/SP500 took 0.0s)
-[17:41:18] fred/NASDAQ100: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/NASDAQ100 took 0.0s)
-[17:41:18] fred/GDPNOW: failed 
-[17:41:18]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
-[17:41:18]    (fred/GDPNOW took 0.0s)
-[17:41:21] fred/DGS3MO: ok source=treasury.gov daily yield curve rows=1261 last_date=2026-11-04
-[17:41:21] fred/DGS6MO: ok source=treasury.gov daily yield curve rows=961 last_date=2026-11-04
-[17:41:21] fred/DGS1: ok source=treasury.gov daily yield curve rows=961 last_date=2026-11-04
-[17:41:21] fred/DGS2: ok source=treasury.gov daily yield curve rows=961 last_date=2026-11-04
-[17:41:21] fred/DGS10: ok source=treasury.gov daily yield curve rows=1261 last_date=2026-11-04
-[17:41:21] fred/DTB3: ok source=treasury.gov daily yield curve rows=1261 last_date=2026-11-04
-[17:41:21] fred/T10Y2Y: ok source=treasury.gov (10y − 2y) rows=961 last_date=2026-11-04
-[17:41:21] fred/T10Y3M: ok source=treasury.gov (10y − 3m) rows=961 last_date=2026-11-04
-[17:41:26] fred/DFII10: ok source=treasury.gov daily real yield curve rows=961 last_date=2026-11-04
-[17:41:27] fred/DCOILWTICO: ok source=Yahoo CL=F (WTI front month) rows=1260 last_date=2026-11-04
-[17:41:27] fred/DTWEXBGS: ok source=Yahoo DXY (dollar index; proxy for the broad index) rows=1260 last_date=2026-11-04
-[17:41:27] fred/VIXCLS: ok source=Yahoo ^VIX rows=1260 last_date=2026-11-04
-[17:41:27] fred/DFF: ok source=Yahoo ZQ=F (30-day fed funds futures, 100 − price) rows=1261 last_date=2026-11-04
-[17:41:27] fred/NFCI: ok source=Chicago Fed NFCI csv rows=2886 last_date=2026-04-24
-[17:41:28] fred/CPIAUCSL: ok source=BLS public API CUSR0000SA0 rows=32 last_date=2026-09-01
-[17:41:29] fred/CPILFESL: ok source=BLS public API CUSR0000SA0L1E rows=32 last_date=2026-09-01
-[17:41:29] fred/UNRATE: ok source=BLS public API LNS14000000 rows=32 last_date=2026-09-01
-[17:41:30] fred/PAYEMS: ok source=BLS public API CES0000000001 rows=33 last_date=2026-09-01
-[17:41:30]    (fred/fallbacks took 12.2s)
-[17:41:31] cboe/VIX: ok rows=9309 last_date=2026-11-04
-[17:41:31]    (cboe/VIX took 0.3s)
-[17:41:31] cboe/VIX3M: ok rows=4309 last_date=2026-11-04
-[17:41:31]    (cboe/VIX3M took 0.4s)
-[17:41:31] cboe/VIX9D: ok rows=3983 last_date=2026-11-04
-[17:41:31]    (cboe/VIX9D took 0.1s)
-[17:41:31] cboe/VXN: ok rows=4315 last_date=2026-11-04
-[17:41:31]    (cboe/VXN took 0.2s)
-[17:41:32] cboe/SKEW: ok rows=9263 last_date=2026-11-04
-[17:41:32]    (cboe/SKEW took 0.2s)
-[17:41:32] misc/qqq_holdings: failed 
-[17:41:32]    error: RuntimeError: weight/ticker columns not found; response starts: <!-- * This file is created specifically to update * lang attribute in html tag and * data-language attribute body tag * based on the country and language * in 
-[17:41:32]    (misc/qqq_holdings took 0.8s)
-[17:42:10] breadth/spx: ok symbols=503 with_data=503 rows=505 last_date=2026-11-04
-[17:42:10]    (breadth/spx took 37.8s)
-[17:42:18] breadth/ndx: ok symbols=101 with_data=101 rows=505 last_date=2026-11-04
-[17:42:18]    (breadth/ndx took 8.1s)
-[17:42:18] misc/aaa_gas: ok rows=7 regular=4.1003
-[17:42:18]    (misc/aaa_gas took 0.1s)
-[17:42:19] misc/gdpnow: failed 
-[17:42:19]    error: RuntimeError: estimate not found; html near 'estimate': ontent="GDPNow forecasting model provides a &quot;nowcast&quot; of the official estimate prior to its release by estimating GDP growth using a methodology similar to the one used by the US Bureau of Economic Analysis." /> <meta name="t || onten
-[17:42:19]    (misc/gdpnow took 0.5s)
-[17:42:19] misc/cleveland_nowcast: ok rows=20 tables=3
-[17:42:19]    (misc/cleveland_nowcast took 0.5s)
-[17:42:21] ism: https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/ -> RuntimeError: HTTP 404 for https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/
-[17:42:23] ism: https://www.ismworld.org/supply-management-news-and-reports/reports/ism-report-on-business/pmi/ -> RuntimeError: HTTP 404 for https://www.ismworld.org/supply-management-news-and-reports/reports/ism-report-on-business/pmi/
-[17:42:31] misc/ism: failed 
-[17:42:31]    error: RuntimeError: no PMI number parsed; text near first 'PMI':  ISM&#174; PMI&#174; Reports function OptanonWrapper() { } (function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l
-[17:42:31]    (misc/ism took 11.7s)
-[17:42:34] misc/cboe_putcall: ok rows=7 equity_pc=0.44
-[17:42:34]    (misc/cboe_putcall took 3.3s)
-[17:42:35] misc/sp500_pe: ok rows=1872 last_date=2026-11-04 last_value=26.25
-[17:42:35]    (misc/sp500_pe took 0.3s)
-[17:42:35] misc/shiller_cape: ok rows=1871 last_date=2026-11-04 last_value=40.62
-[17:42:35]    (misc/shiller_cape took 0.2s)
-[17:42:40] misc/calendar: ok fomc=56 cpi=14 nfp=14
-[17:42:40]    error: cpi: RuntimeError: HTTP 403 for https://www.bls.gov/schedule/news_release/cpi.htm; nfp: RuntimeError: HTTP 403 for https://www.bls.gov/schedule/news_release/empsit.htm
-[17:42:40]    (misc/calendar took 5.4s)
-[17:42:40] done: 62/81 sources ok
+[17:44:43] fetch start; 31 tickers, 34 FRED series
+[17:44:48]    (prices/bulk took 5.4s)
+[17:44:48] yfinance bulk: 31/31 tickers
+[17:44:48] prices/QQQ: ok source=yfinance rows=6958 last_date=2026-11-04
+[17:44:48]    (prices/QQQ took 0.1s)
+[17:44:48] prices/IVV: ok source=yfinance rows=6655 last_date=2026-11-04
+[17:44:48]    (prices/IVV took 0.1s)
+[17:44:48] prices/TQQQ: ok source=yfinance rows=4209 last_date=2026-11-04
+[17:44:48]    (prices/TQQQ took 0.0s)
+[17:44:48] prices/SPY: ok source=yfinance rows=8500 last_date=2026-11-04
+[17:44:48]    (prices/SPY took 0.1s)
+[17:44:48] prices/XLK: ok source=yfinance rows=7010 last_date=2026-11-04
+[17:44:48]    (prices/XLK took 0.1s)
+[17:44:48] prices/XLY: ok source=yfinance rows=7010 last_date=2026-11-04
+[17:44:48]    (prices/XLY took 0.1s)
+[17:44:48] prices/XLC: ok source=yfinance rows=2107 last_date=2026-11-04
+[17:44:48]    (prices/XLC took 0.0s)
+[17:44:48] prices/XLF: ok source=yfinance rows=7010 last_date=2026-11-04
+[17:44:48]    (prices/XLF took 0.1s)
+[17:44:49] prices/XLV: ok source=yfinance rows=7010 last_date=2026-11-04
+[17:44:49]    (prices/XLV took 0.1s)
+[17:44:49] prices/XLI: ok source=yfinance rows=7010 last_date=2026-11-04
+[17:44:49]    (prices/XLI took 0.1s)
+[17:44:49] prices/XLE: ok source=yfinance rows=7010 last_date=2026-11-04
+[17:44:49]    (prices/XLE took 0.1s)
+[17:44:49] prices/XLP: ok source=yfinance rows=7010 last_date=2026-11-04
+[17:44:49]    (prices/XLP took 0.1s)
+[17:44:49] prices/XLU: ok source=yfinance rows=7010 last_date=2026-11-04
+[17:44:49]    (prices/XLU took 0.1s)
+[17:44:49] prices/XLRE: ok source=yfinance rows=2785 last_date=2026-11-04
+[17:44:49]    (prices/XLRE took 0.0s)
+[17:44:49] prices/XLB: ok source=yfinance rows=7010 last_date=2026-11-04
+[17:44:49]    (prices/XLB took 0.1s)
+[17:44:49] prices/RSP: ok source=yfinance rows=5917 last_date=2026-11-04
+[17:44:49]    (prices/RSP took 0.1s)
+[17:44:49] prices/QQQE: ok source=yfinance rows=3678 last_date=2026-11-04
+[17:44:49]    (prices/QQQE took 0.0s)
+[17:44:49] prices/SPHB: ok source=yfinance rows=3965 last_date=2026-11-04
+[17:44:49]    (prices/SPHB took 0.0s)
+[17:44:49] prices/SPLV: ok source=yfinance rows=3899 last_date=2026-11-04
+[17:44:49]    (prices/SPLV took 0.0s)
+[17:44:49] prices/SMH: ok source=yfinance rows=6645 last_date=2026-11-04
+[17:44:49]    (prices/SMH took 0.1s)
+[17:44:49] prices/IWM: ok source=yfinance rows=6650 last_date=2026-11-04
+[17:44:49]    (prices/IWM took 0.1s)
+[17:44:49] prices/HYG: ok source=yfinance rows=4925 last_date=2026-11-04
+[17:44:49]    (prices/HYG took 0.0s)
+[17:44:49] prices/IEF: ok source=yfinance rows=6107 last_date=2026-11-04
+[17:44:49]    (prices/IEF took 0.1s)
+[17:44:49] prices/UUP: ok source=yfinance rows=4953 last_date=2026-11-04
+[17:44:49]    (prices/UUP took 0.0s)
+[17:44:49] prices/TLT: ok source=yfinance rows=6107 last_date=2026-11-04
+[17:44:49]    (prices/TLT took 0.1s)
+[17:44:49] prices/GLD: ok source=yfinance rows=5525 last_date=2026-11-04
+[17:44:49]    (prices/GLD took 0.0s)
+[17:44:49] prices/^VIX: ok source=yfinance rows=9281 last_date=2026-11-04
+[17:44:49]    (prices/^VIX took 0.1s)
+[17:44:50] prices/^VXN: ok source=yfinance rows=6485 last_date=2026-11-04
+[17:44:50]    (prices/^VXN took 0.1s)
+[17:44:50] prices/^NDX: ok source=yfinance rows=10354 last_date=2026-11-04
+[17:44:50]    (prices/^NDX took 0.1s)
+[17:44:50] prices/^GSPC: ok source=yfinance rows=24829 last_date=2026-11-04
+[17:44:50]    (prices/^GSPC took 0.2s)
+[17:44:50] prices/^MOVE: ok source=yfinance rows=5930 last_date=2026-11-04
+[17:44:50]    (prices/^MOVE took 0.0s)
+[17:44:50] FRED via fredgraph.csv (no FRED_API_KEY secret set)
+[17:45:06] fred/DGS10: kept_previous 
+[17:45:06]    error: fredgraph: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=15)
+[17:45:06]    (fred/DGS10 took 16.6s)
+[17:45:23] fred/DGS2: kept_previous 
+[17:45:23]    error: fredgraph: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=15)
+[17:45:23]    (fred/DGS2 took 16.6s)
+[17:45:40] fred/DGS1: kept_previous 
+[17:45:40]    error: fredgraph: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=15)
+[17:45:40]    (fred/DGS1 took 16.6s)
+[17:45:40] fred/DGS6MO: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/DGS6MO took 0.0s)
+[17:45:40] fred/DGS3MO: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/DGS3MO took 0.0s)
+[17:45:40] fred/DTB3: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/DTB3 took 0.0s)
+[17:45:40] fred/DFII10: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/DFII10 took 0.0s)
+[17:45:40] fred/T10Y2Y: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/T10Y2Y took 0.0s)
+[17:45:40] fred/T10Y3M: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/T10Y3M took 0.0s)
+[17:45:40] fred/T10YIE: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/T10YIE took 0.0s)
+[17:45:40] fred/T5YIFR: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/T5YIFR took 0.0s)
+[17:45:40] fred/BAMLH0A0HYM2: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/BAMLH0A0HYM2 took 0.0s)
+[17:45:40] fred/BAMLC0A0CM: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/BAMLC0A0CM took 0.0s)
+[17:45:40] fred/VIXCLS: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/VIXCLS took 0.0s)
+[17:45:40] fred/DTWEXBGS: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/DTWEXBGS took 0.0s)
+[17:45:40] fred/DCOILWTICO: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/DCOILWTICO took 0.0s)
+[17:45:40] fred/DFF: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/DFF took 0.0s)
+[17:45:40] fred/WALCL: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/WALCL took 0.0s)
+[17:45:40] fred/WTREGEN: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/WTREGEN took 0.0s)
+[17:45:40] fred/RRPONTSYD: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/RRPONTSYD took 0.0s)
+[17:45:40] fred/NFCI: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/NFCI took 0.0s)
+[17:45:40] fred/ICSA: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/ICSA took 0.0s)
+[17:45:40] fred/CCSA: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/CCSA took 0.0s)
+[17:45:40] fred/UMCSENT: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/UMCSENT took 0.0s)
+[17:45:40] fred/MICH: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/MICH took 0.0s)
+[17:45:40] fred/GASREGW: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/GASREGW took 0.0s)
+[17:45:40] fred/CPIAUCSL: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/CPIAUCSL took 0.0s)
+[17:45:40] fred/CPILFESL: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/CPILFESL took 0.0s)
+[17:45:40] fred/PCEPILFE: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/PCEPILFE took 0.0s)
+[17:45:40] fred/UNRATE: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/UNRATE took 0.0s)
+[17:45:40] fred/PAYEMS: kept_previous 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/PAYEMS took 0.0s)
+[17:45:40] fred/SP500: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/SP500 took 0.0s)
+[17:45:40] fred/NASDAQ100: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/NASDAQ100 took 0.0s)
+[17:45:40] fred/GDPNOW: failed 
+[17:45:40]    error: skipped: FRED unreachable from this runner (3 earlier timeouts)
+[17:45:40]    (fred/GDPNOW took 0.0s)
+[17:45:43] fred/DGS3MO: ok source=treasury.gov daily yield curve rows=1261 last_date=2026-11-04
+[17:45:43] fred/DGS6MO: ok source=treasury.gov daily yield curve rows=961 last_date=2026-11-04
+[17:45:43] fred/DGS1: ok source=treasury.gov daily yield curve rows=961 last_date=2026-11-04
+[17:45:43] fred/DGS2: ok source=treasury.gov daily yield curve rows=961 last_date=2026-11-04
+[17:45:43] fred/DGS10: ok source=treasury.gov daily yield curve rows=1261 last_date=2026-11-04
+[17:45:43] fred/DTB3: ok source=treasury.gov daily yield curve rows=1261 last_date=2026-11-04
+[17:45:43] fred/T10Y2Y: ok source=treasury.gov (10y − 2y) rows=961 last_date=2026-11-04
+[17:45:43] fred/T10Y3M: ok source=treasury.gov (10y − 3m) rows=961 last_date=2026-11-04
+[17:45:47] fred/DFII10: ok source=treasury.gov daily real yield curve rows=961 last_date=2026-11-04
+[17:45:48] fred/DFF: ok source=Yahoo ZQ=F (30-day fed funds futures, 100 − price) rows=1261 last_date=2026-11-04
+[17:45:48] fred/DCOILWTICO: ok source=Yahoo CL=F (WTI front month) rows=1260 last_date=2026-11-04
+[17:45:48] fred/VIXCLS: ok source=Yahoo ^VIX rows=1260 last_date=2026-11-04
+[17:45:48] fred/DTWEXBGS: ok source=Yahoo DXY (dollar index; proxy for the broad index) rows=1260 last_date=2026-11-04
+[17:45:48] fred/NFCI: ok source=Chicago Fed NFCI csv rows=2886 last_date=2026-04-24
+[17:45:49] fred/CPIAUCSL: ok source=BLS public API CUSR0000SA0 rows=32 last_date=2026-09-01
+[17:45:49] fred/CPILFESL: ok source=BLS public API CUSR0000SA0L1E rows=32 last_date=2026-09-01
+[17:45:50] fred/UNRATE: ok source=BLS public API LNS14000000 rows=32 last_date=2026-09-01
+[17:45:51] fred/PAYEMS: ok source=BLS public API CES0000000001 rows=33 last_date=2026-09-01
+[17:45:51]    (fred/fallbacks took 11.5s)
+[17:45:51] cboe/VIX: ok rows=9309 last_date=2026-11-04
+[17:45:51]    (cboe/VIX took 0.2s)
+[17:45:52] cboe/VIX3M: ok rows=4309 last_date=2026-11-04
+[17:45:52]    (cboe/VIX3M took 0.2s)
+[17:45:52] cboe/VIX9D: ok rows=3983 last_date=2026-11-04
+[17:45:52]    (cboe/VIX9D took 0.2s)
+[17:45:52] cboe/VXN: ok rows=4315 last_date=2026-11-04
+[17:45:52]    (cboe/VXN took 0.2s)
+[17:45:52] cboe/SKEW: ok rows=9263 last_date=2026-11-04
+[17:45:52]    (cboe/SKEW took 0.2s)
+[17:45:53] misc/qqq_holdings: failed 
+[17:45:53]    error: RuntimeError: weight/ticker columns not found; response starts: <!-- * This file is created specifically to update * lang attribute in html tag and * data-language attribute body tag * based on the country and language * in 
+[17:45:53]    (misc/qqq_holdings took 0.9s)
+[17:46:31] breadth/spx: ok symbols=503 with_data=503 rows=505 last_date=2026-11-04
+[17:46:31]    (breadth/spx took 37.7s)
+[17:46:38] breadth/ndx: ok symbols=101 with_data=101 rows=505 last_date=2026-11-04
+[17:46:38]    (breadth/ndx took 7.1s)
+[17:46:38] misc/aaa_gas: ok rows=7 regular=4.1003
+[17:46:38]    (misc/aaa_gas took 0.1s)
+[17:46:39] misc/gdpnow: failed 
+[17:46:39]    error: RuntimeError: estimate not found; html near 'estimate': ontent="GDPNow forecasting model provides a &quot;nowcast&quot; of the official estimate prior to its release by estimating GDP growth using a methodology similar to the one used by the US Bureau of Economic Analysis." /> <meta name="t || onten
+[17:46:39]    (misc/gdpnow took 0.9s)
+[17:46:39] misc/cleveland_nowcast: ok rows=20 tables=3
+[17:46:39]    (misc/cleveland_nowcast took 0.3s)
+[17:46:41] ism: https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/ -> RuntimeError: HTTP 404 for https://www.ismworld.org/supply-management-news-and-reports/reports/ism-pmi-reports/pmi/
+[17:46:43] ism: https://www.ismworld.org/supply-management-news-and-reports/reports/ism-report-on-business/pmi/ -> RuntimeError: HTTP 404 for https://www.ismworld.org/supply-management-news-and-reports/reports/ism-report-on-business/pmi/
+[17:46:52] misc/ism: failed 
+[17:46:52]    error: RuntimeError: no PMI number parsed; text near first 'PMI':  ISM&#174; PMI&#174; Reports function OptanonWrapper() { } (function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l
+[17:46:52]    (misc/ism took 12.4s)
+[17:46:54] misc/cboe_putcall: ok rows=7 equity_pc=0.44
+[17:46:54]    (misc/cboe_putcall took 2.0s)
+[17:46:54] misc/sp500_pe: ok rows=1872 last_date=2026-11-04 last_value=26.25
+[17:46:54]    (misc/sp500_pe took 0.2s)
+[17:46:54] misc/shiller_cape: ok rows=1871 last_date=2026-11-04 last_value=40.62
+[17:46:54]    (misc/shiller_cape took 0.2s)
+[17:46:59] misc/calendar: ok fomc=56 cpi=14 nfp=14
+[17:46:59]    error: cpi: RuntimeError: HTTP 403 for https://www.bls.gov/schedule/news_release/cpi.htm; nfp: RuntimeError: HTTP 403 for https://www.bls.gov/schedule/news_release/empsit.htm
+[17:46:59]    (misc/calendar took 5.4s)
+[17:46:59] done: 62/81 sources ok
