@@ -401,7 +401,7 @@ def fetch_fred_fallbacks() -> None:
     if not missing:
         return
     this_year = date.today().year
-    years = [this_year - 3, this_year - 2, this_year - 1, this_year]
+    years = list(range(1999, this_year + 1))  # full history: the backtests need the bill rate back to the 2000 bear
     curve_targets = {"DGS3MO": "3mo", "DGS6MO": "6mo", "DGS1": "1yr", "DGS2": "2yr", "DGS10": "10yr", "DTB3": "3mo"}
     if missing & (set(curve_targets) | {"T10Y2Y", "T10Y3M"}):
         try:
@@ -417,7 +417,7 @@ def fetch_fred_fallbacks() -> None:
             log(f"treasury yield curve fallback failed: {type(e).__name__}: {e}")
     if "DFII10" in missing:
         try:
-            rv = treasury_curve("daily_treasury_real_yield_curve", years)
+            rv = treasury_curve("daily_treasury_real_yield_curve", [y for y in years if y >= 2003])
             if "10yr" in rv.columns:
                 write_fallback_series("DFII10", rv.rename(columns={"10yr": "value"})[["date", "value"]], "treasury.gov daily real yield curve")
         except Exception as e:  # noqa: BLE001
