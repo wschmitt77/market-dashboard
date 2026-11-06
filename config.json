@@ -35,7 +35,8 @@
   "SSO",
   "UPRO",
   "BIL",
-  "GC=F"
+  "GC=F",
+  "DIA"
  ],
  "yahoo_indices": [
   "^VIX",
@@ -44,7 +45,8 @@
   "^GSPC",
   "^MOVE",
   "^IRX",
-  "^TNX"
+  "^TNX",
+  "^DJI"
  ],
  "cboe_indices": [
   "VIX",
