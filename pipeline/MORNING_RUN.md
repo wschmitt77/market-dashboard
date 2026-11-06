@@ -42,7 +42,7 @@ with the values in the task prompt.
 
 6. **Upload the data files** as assets of the dashboard, one `Artifact` publish call per file with `asset: true`,
    `url` = dashboard URL and `file_path` = each of:
-   `summary.json, metrics.json, series.json, sectors.json, composite_parts.json, backtest.json, backtest_curve.json,
+   `summary.json, metrics.json, series.json, sectors.json, composite_parts.json, gauges.json, backtest.json, backtest_curve.json,
    backtest_stats.json, events.json, sources.json, insights.json, insight_log.json, scorecard.json, score_history.json, history.json,
    allocation.json, plan.json`.
    Collect each result's `url` (`/_blob/<id>`) into `out/assets.json` as `{"summary.json": "/_blob/...", ...}`.

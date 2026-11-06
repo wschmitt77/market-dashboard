@@ -1258,6 +1258,57 @@ CATEGORY_LABEL = {"regime": "Regime", "dip_buy": "Dip buy", "heat": "Heat", "sec
                   "credit_rates": "Credit & rates", "macro": "Macro", "calendar": "Calendar", "risk": "Risk"}
 
 
+# ============================================================================ oversold / overbought gauges
+GAUGE_BANDS = [(20, "Oversold", "ok"), (40, "Leaning oversold", "ok"), (60, "Neutral", ""), (80, "Leaning overbought", "warn"), (101, "Overbought", "bad")]
+
+
+def gauge_status(score: float | None) -> tuple[str, str]:
+    if score is None:
+        return "Unavailable", ""
+    for top, label, cls in GAUGE_BANDS:
+        if score < top:
+            return label, cls
+    return "Overbought", "bad"
+
+
+def oversold_gauges(data: Data) -> list[dict]:
+    """One row per index: a 0-100 short-term stretch score (0 = deeply oversold, 100 = overbought) from RSI(14),
+    Bollinger %B(20,2) and the distance from the 20-day mean in ATR units, equally weighted, with the inputs shown."""
+    rows = []
+    specs = [("QQQ", "QQQ", "Nasdaq-100", ["QQQ"]), ("IVV", "IVV", "S&P 500", ["IVV"]), ("DOW", "DOW", "Dow Jones Industrials", ["^DJI", "DIA"])]
+    for key, ticker, name, syms in specs:
+        df = None
+        used = None
+        for sym in syms:
+            df = data.prices(sym)
+            if df is not None and len(df) > 260:
+                used = sym
+                break
+        if df is None or used is None:
+            rows.append({"key": key, "ticker": ticker, "name": name, "score": None, "status": "Unavailable", "status_class": "", "close_fmt": "—", "chg_1d_fmt": "—", "inputs_fmt": "no data in the feed", "rsi14": None, "pct_b": None, "atr_stretch": None, "off_high_52w": None, "source": ", ".join(syms)})
+            continue
+        close = df["close"]
+        r14 = rsi(close, 14)
+        pb = pct_b(close, 20, 2.0)
+        a = atr(df, 14)
+        stretch = (close - sma(close, 20)) / a
+        v_rsi, v_pb, v_st = last(r14), last(pb), last(stretch)
+        comps = [c for c in (v_rsi, scale(v_pb, -0.25, 1.25), scale(v_st, -4.0, 4.0)) if c is not None]
+        score = round(sum(comps) / len(comps), 1) if comps else None
+        label, cls = gauge_status(score)
+        hi52 = float(close.iloc[-252:].max())
+        off_high = (float(close.iloc[-1]) / hi52 - 1) * 100
+        chg = change(close, 1, pct=True)
+        level = float(close.iloc[-1])
+        rows.append({"key": key, "ticker": ticker, "name": name, "score": score, "status": label, "status_class": cls,
+                     "close": round(level, 2), "close_fmt": (f"{level:,.0f}" if level > 5000 else f"{level:,.2f}"), "chg_1d": None if chg is None else round(chg, 2), "chg_1d_fmt": pct(chg),
+                     "rsi14": None if v_rsi is None else round(v_rsi, 1), "pct_b": None if v_pb is None else round(v_pb, 2), "atr_stretch": None if v_st is None else round(v_st, 2),
+                     "off_high_52w": round(off_high, 2), "rsi2": None if last(rsi(close, 2)) is None else round(last(rsi(close, 2)), 1),
+                     "inputs_fmt": f"RSI(14) {f(v_rsi, '{:.0f}')} · %B {f(v_pb, '{:.2f}')} · {f(v_st, '{:+.1f}')} ATR from the 20-day · {off_high:.1f}% from the 52-week high",
+                     "source": used, "date": last_date(close)})
+    return rows
+
+
 def validate_insights(doc: dict, as_of: date) -> list[dict]:
     items = doc.get("insights") if isinstance(doc, dict) else doc
     if not isinstance(items, list) or not items:
@@ -1477,6 +1528,7 @@ def main() -> int:
         for key in ("summary", "metrics", "series", "sectors", "backtest", "backtest_curve", "backtest_stats", "events", "sources", "composite_parts"):
             write_json(out_dir / f"{key}.json", out[key])
         write_json(out_dir / "composites.json", out["composites"])
+        write_json(out_dir / "gauges.json", oversold_gauges(data))
         # score prior insights now so the brief can mention them
         prev_log = []
         for day in history["days"]:

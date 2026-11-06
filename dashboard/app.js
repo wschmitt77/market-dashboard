@@ -63,6 +63,29 @@
 
   ['qqq', 'ivv', 'tqqq', 'vix'].forEach((k) => dash.draw('spark_' + k, (el) => { const rows = rowsOf('series', el, 'chart'); if (!rows) return; MS.spark(el, rows, k, 126); }));
 
+  // ---------------------------------------------------------------- oversold / overbought gauges (QQQ, IVV, Dow)
+  function gaugeTile(name) {
+    dash.draw(name, (el) => {
+      const rows = rowsOf('gauges', el, 'chart'); if (!rows) return;
+      MS.clear(el);
+      const r = rows.find((x) => String(x.key) === el.dataset.key);
+      const head = document.createElement('div'); head.className = 'ms-ghead';
+      const lab = document.createElement('div'); lab.className = 'ms-label'; lab.textContent = r ? `${r.ticker} · ${r.name || ''}` : el.dataset.key;
+      const lvl = document.createElement('div'); lvl.className = 'ms-glevel'; lvl.textContent = r ? `${r.close_fmt || '—'} · ${r.chg_1d_fmt || '—'}` : '—';
+      head.appendChild(lab); head.appendChild(lvl); el.appendChild(head);
+      const status = document.createElement('div'); status.className = 'ms-gstatus ' + (r && r.status_class ? r.status_class : ''); status.textContent = r ? (r.status || '—') : 'No data';
+      el.appendChild(status);
+      const score = r ? MS.num(r.score) : null;
+      const bar = document.createElement('div'); bar.className = 'ms-gbar'; bar.setAttribute('role', 'img'); bar.setAttribute('aria-label', score == null ? 'no score' : `stretch score ${Math.round(score)} of 100`);
+      if (score != null) { const needle = document.createElement('div'); needle.className = 'ms-gneedle'; needle.style.left = Math.max(0, Math.min(100, score)) + '%'; bar.appendChild(needle); }
+      const scale = document.createElement('div'); scale.className = 'ms-gscale'; ['oversold', 'neutral', 'overbought'].forEach((t) => { const sp = document.createElement('span'); sp.textContent = t; scale.appendChild(sp); }); bar.appendChild(scale);
+      el.appendChild(bar);
+      const inputs = document.createElement('div'); inputs.className = 'ms-ginputs'; inputs.textContent = r ? ((score == null ? '' : `Score ${Math.round(score)} of 100 · `) + (r.inputs_fmt || '')) : '';
+      el.appendChild(inputs);
+    });
+  }
+  ['gauge_qqq', 'gauge_ivv', 'gauge_dow'].forEach(gaugeTile);
+
   // ---------------------------------------------------------------- recommended allocation (plan panel)
   textDraw('plan_headline', 'plan', 'value', { where: { key: 'headline' } });
   textDraw('plan_headline_detail', 'plan', 'detail', { where: { key: 'headline' } });

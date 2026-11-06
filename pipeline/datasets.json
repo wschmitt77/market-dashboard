@@ -3,6 +3,10 @@
   "schedule": "Rebuilt each weekday morning before 6 AM Central by a scheduled Claude task from the GitHub data feed",
   "staleAfterHours": 80,
   "datasets": {
+    "gauges": {
+      "title": "Oversold / overbought gauges",
+      "description": "QQQ, IVV and the Dow: a 0–100 short-term stretch score from RSI(14), Bollinger %B and the distance from the 20-day mean in ATR units, with the status label and inputs, computed by pipeline.py from the GitHub feed."
+    },
     "allocation": {
       "title": "Recommended allocation",
       "description": "One row per fund: the plan's target, the holdings on file marked to the last close, and the trade between them, computed by plan.py from the rules and the GitHub feed."
