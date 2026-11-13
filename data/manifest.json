@@ -1,588 +1,588 @@
 {
- "run_at": "2026-11-12T11:17:27+00:00",
+ "run_at": "2026-11-13T11:13:57+00:00",
  "sources": {
   "prices/QQQ": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:32+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 6963,
-   "last_date": "2026-11-11"
+   "rows": 6964,
+   "last_date": "2026-11-12"
   },
   "prices/IVV": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:32+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 6660,
-   "last_date": "2026-11-11"
+   "rows": 6661,
+   "last_date": "2026-11-12"
   },
   "prices/TQQQ": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:32+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 4214,
-   "last_date": "2026-11-11"
+   "rows": 4215,
+   "last_date": "2026-11-12"
   },
   "prices/SPY": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 8505,
-   "last_date": "2026-11-11"
+   "rows": 8506,
+   "last_date": "2026-11-12"
   },
   "prices/XLK": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 7015,
-   "last_date": "2026-11-11"
+   "rows": 7016,
+   "last_date": "2026-11-12"
   },
   "prices/XLY": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 7015,
-   "last_date": "2026-11-11"
+   "rows": 7016,
+   "last_date": "2026-11-12"
   },
   "prices/XLC": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 2112,
-   "last_date": "2026-11-11"
+   "rows": 2113,
+   "last_date": "2026-11-12"
   },
   "prices/XLF": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 7015,
-   "last_date": "2026-11-11"
+   "rows": 7016,
+   "last_date": "2026-11-12"
   },
   "prices/XLV": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 7015,
-   "last_date": "2026-11-11"
+   "rows": 7016,
+   "last_date": "2026-11-12"
   },
   "prices/XLI": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 7015,
-   "last_date": "2026-11-11"
+   "rows": 7016,
+   "last_date": "2026-11-12"
   },
   "prices/XLE": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 7015,
-   "last_date": "2026-11-11"
+   "rows": 7016,
+   "last_date": "2026-11-12"
   },
   "prices/XLP": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 7015,
-   "last_date": "2026-11-11"
+   "rows": 7016,
+   "last_date": "2026-11-12"
   },
   "prices/XLU": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 7015,
-   "last_date": "2026-11-11"
+   "rows": 7016,
+   "last_date": "2026-11-12"
   },
   "prices/XLRE": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 2790,
-   "last_date": "2026-11-11"
+   "rows": 2791,
+   "last_date": "2026-11-12"
   },
   "prices/XLB": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 7015,
-   "last_date": "2026-11-11"
+   "rows": 7016,
+   "last_date": "2026-11-12"
   },
   "prices/RSP": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 5922,
-   "last_date": "2026-11-11"
+   "rows": 5923,
+   "last_date": "2026-11-12"
   },
   "prices/QQQE": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 3683,
-   "last_date": "2026-11-11"
+   "rows": 3684,
+   "last_date": "2026-11-12"
   },
   "prices/SPHB": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 3970,
-   "last_date": "2026-11-11"
+   "rows": 3971,
+   "last_date": "2026-11-12"
   },
   "prices/SPLV": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 3904,
-   "last_date": "2026-11-11"
+   "rows": 3905,
+   "last_date": "2026-11-12"
   },
   "prices/SMH": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 6650,
-   "last_date": "2026-11-11"
+   "rows": 6651,
+   "last_date": "2026-11-12"
   },
   "prices/IWM": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 6655,
-   "last_date": "2026-11-11"
+   "rows": 6656,
+   "last_date": "2026-11-12"
   },
   "prices/HYG": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:02+00:00",
    "source": "yfinance",
-   "rows": 4930,
-   "last_date": "2026-11-11"
+   "rows": 4931,
+   "last_date": "2026-11-12"
   },
   "prices/IEF": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 6112,
-   "last_date": "2026-11-11"
+   "rows": 6113,
+   "last_date": "2026-11-12"
   },
   "prices/UUP": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 4958,
-   "last_date": "2026-11-11"
+   "rows": 4959,
+   "last_date": "2026-11-12"
   },
   "prices/TLT": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 6112,
-   "last_date": "2026-11-11"
+   "rows": 6113,
+   "last_date": "2026-11-12"
   },
   "prices/GLD": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 5530,
-   "last_date": "2026-11-11"
+   "rows": 5531,
+   "last_date": "2026-11-12"
   },
   "prices/QLD": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 5131,
-   "last_date": "2026-11-11"
+   "rows": 5132,
+   "last_date": "2026-11-12"
   },
   "prices/SSO": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:33+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 5131,
-   "last_date": "2026-11-11"
+   "rows": 5132,
+   "last_date": "2026-11-12"
   },
   "prices/UPRO": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 4373,
-   "last_date": "2026-11-11"
+   "rows": 4374,
+   "last_date": "2026-11-12"
   },
   "prices/BIL": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 4981,
-   "last_date": "2026-11-11"
+   "rows": 4982,
+   "last_date": "2026-11-12"
   },
   "prices/GC=F": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 6576,
-   "last_date": "2026-11-11"
+   "rows": 6577,
+   "last_date": "2026-11-12"
   },
   "prices/DIA": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 7249,
-   "last_date": "2026-11-11"
+   "rows": 7250,
+   "last_date": "2026-11-12"
   },
   "prices/^VIX": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 9286,
-   "last_date": "2026-11-11"
+   "rows": 9287,
+   "last_date": "2026-11-12"
   },
   "prices/^VXN": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 6490,
-   "last_date": "2026-11-11"
+   "rows": 6491,
+   "last_date": "2026-11-12"
   },
   "prices/^NDX": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 10437,
-   "last_date": "2026-11-11"
+   "rows": 10438,
+   "last_date": "2026-11-12"
   },
   "prices/^GSPC": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 24834,
-   "last_date": "2026-11-11"
+   "rows": 24835,
+   "last_date": "2026-11-12"
   },
   "prices/^MOVE": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 5934,
-   "last_date": "2026-11-10"
+   "rows": 5935,
+   "last_date": "2026-11-12"
   },
   "prices/^IRX": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 16701,
-   "last_date": "2026-11-11"
+   "rows": 16702,
+   "last_date": "2026-11-12"
   },
   "prices/^TNX": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 16204,
-   "last_date": "2026-11-11"
+   "rows": 16205,
+   "last_date": "2026-11-12"
   },
   "prices/^DJI": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:17:34+00:00",
+   "fetched_at": "2026-11-13T11:14:03+00:00",
    "source": "yfinance",
-   "rows": 8778,
-   "last_date": "2026-11-11"
+   "rows": 8779,
+   "last_date": "2026-11-12"
   },
   "fred/DGS10": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:18:47+00:00",
+   "fetched_at": "2026-11-13T11:15:21+00:00",
    "source": "treasury.gov daily yield curve",
-   "rows": 6978,
-   "last_date": "2026-11-10"
+   "rows": 6979,
+   "last_date": "2026-11-12"
   },
   "fred/DGS2": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:18:47+00:00",
+   "fetched_at": "2026-11-13T11:15:21+00:00",
    "source": "treasury.gov daily yield curve",
-   "rows": 6969,
-   "last_date": "2026-11-10"
+   "rows": 6970,
+   "last_date": "2026-11-12"
   },
   "fred/DGS1": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:18:47+00:00",
+   "fetched_at": "2026-11-13T11:15:21+00:00",
    "source": "treasury.gov daily yield curve",
-   "rows": 6969,
-   "last_date": "2026-11-10"
+   "rows": 6970,
+   "last_date": "2026-11-12"
   },
   "fred/DGS6MO": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:18:47+00:00",
+   "fetched_at": "2026-11-13T11:15:21+00:00",
    "source": "treasury.gov daily yield curve",
-   "rows": 6969,
-   "last_date": "2026-11-10"
+   "rows": 6970,
+   "last_date": "2026-11-12"
   },
   "fred/DGS3MO": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:18:47+00:00",
+   "fetched_at": "2026-11-13T11:15:21+00:00",
    "source": "treasury.gov daily yield curve",
-   "rows": 6975,
-   "last_date": "2026-11-10"
+   "rows": 6976,
+   "last_date": "2026-11-12"
   },
   "fred/DTB3": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:18:47+00:00",
+   "fetched_at": "2026-11-13T11:15:21+00:00",
    "source": "treasury.gov daily yield curve",
-   "rows": 6975,
-   "last_date": "2026-11-10"
+   "rows": 6976,
+   "last_date": "2026-11-12"
   },
   "fred/DFII10": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:08+00:00",
+   "fetched_at": "2026-11-13T11:15:45+00:00",
    "source": "treasury.gov daily real yield curve",
-   "rows": 5969,
-   "last_date": "2026-11-10"
+   "rows": 5970,
+   "last_date": "2026-11-12"
   },
   "fred/T10Y2Y": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:18:47+00:00",
+   "fetched_at": "2026-11-13T11:15:21+00:00",
    "source": "treasury.gov (10y \u2212 2y)",
-   "rows": 6969,
-   "last_date": "2026-11-10"
+   "rows": 6970,
+   "last_date": "2026-11-12"
   },
   "fred/T10Y3M": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:18:47+00:00",
+   "fetched_at": "2026-11-13T11:15:21+00:00",
    "source": "treasury.gov (10y \u2212 3m)",
-   "rows": 6966,
-   "last_date": "2026-11-10"
+   "rows": 6967,
+   "last_date": "2026-11-12"
   },
   "fred/T10YIE": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/T5YIFR": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/BAMLH0A0HYM2": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/BAMLC0A0CM": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/VIXCLS": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:09+00:00",
+   "fetched_at": "2026-11-13T11:15:46+00:00",
    "source": "Yahoo ^VIX",
-   "rows": 1265,
-   "last_date": "2026-11-11"
+   "rows": 1266,
+   "last_date": "2026-11-12"
   },
   "fred/DTWEXBGS": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:09+00:00",
+   "fetched_at": "2026-11-13T11:15:46+00:00",
    "source": "Yahoo DXY (dollar index; proxy for the broad index)",
-   "rows": 1265,
-   "last_date": "2026-11-11"
+   "rows": 1266,
+   "last_date": "2026-11-12"
   },
   "fred/DCOILWTICO": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:09+00:00",
+   "fetched_at": "2026-11-13T11:15:46+00:00",
    "source": "Yahoo CL=F (WTI front month)",
-   "rows": 1265,
-   "last_date": "2026-11-11"
+   "rows": 1266,
+   "last_date": "2026-11-12"
   },
   "fred/DFF": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:09+00:00",
+   "fetched_at": "2026-11-13T11:15:46+00:00",
    "source": "Yahoo ZQ=F (30-day fed funds futures, 100 \u2212 price)",
-   "rows": 1266,
-   "last_date": "2026-11-11"
+   "rows": 1267,
+   "last_date": "2026-11-12"
   },
   "fred/WALCL": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/WTREGEN": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/RRPONTSYD": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/NFCI": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:09+00:00",
+   "fetched_at": "2026-11-13T11:15:47+00:00",
    "source": "Chicago Fed NFCI csv",
    "rows": 2886,
    "last_date": "2026-04-24"
   },
   "fred/ICSA": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/CCSA": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/UMCSENT": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/MICH": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/GASREGW": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/CPIAUCSL": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:10+00:00",
+   "fetched_at": "2026-11-13T11:15:47+00:00",
    "source": "BLS public API CUSR0000SA0",
    "rows": 33,
    "last_date": "2026-10-01"
   },
   "fred/CPILFESL": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:10+00:00",
+   "fetched_at": "2026-11-13T11:15:48+00:00",
    "source": "BLS public API CUSR0000SA0L1E",
    "rows": 33,
    "last_date": "2026-10-01"
   },
   "fred/PCEPILFE": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/UNRATE": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:11+00:00",
+   "fetched_at": "2026-11-13T11:15:48+00:00",
    "source": "BLS public API LNS14000000",
    "rows": 33,
    "last_date": "2026-10-01"
   },
   "fred/PAYEMS": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:12+00:00",
+   "fetched_at": "2026-11-13T11:15:49+00:00",
    "source": "BLS public API CES0000000001",
    "rows": 34,
    "last_date": "2026-10-01"
   },
   "fred/SP500": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/NASDAQ100": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "fred/GDPNOW": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:18:24+00:00",
+   "fetched_at": "2026-11-13T11:14:53+00:00",
    "error": "skipped: FRED unreachable from this runner (3 earlier timeouts)"
   },
   "cboe/VIX": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:12+00:00",
-   "rows": 9314,
-   "last_date": "2026-11-11"
+   "fetched_at": "2026-11-13T11:15:50+00:00",
+   "rows": 9315,
+   "last_date": "2026-11-12"
   },
   "cboe/VIX3M": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:13+00:00",
-   "rows": 4314,
-   "last_date": "2026-11-11"
+   "fetched_at": "2026-11-13T11:15:50+00:00",
+   "rows": 4315,
+   "last_date": "2026-11-12"
   },
   "cboe/VIX9D": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:13+00:00",
-   "rows": 3988,
-   "last_date": "2026-11-11"
+   "fetched_at": "2026-11-13T11:15:50+00:00",
+   "rows": 3989,
+   "last_date": "2026-11-12"
   },
   "cboe/VXN": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:13+00:00",
-   "rows": 4320,
-   "last_date": "2026-11-11"
+   "fetched_at": "2026-11-13T11:15:50+00:00",
+   "rows": 4321,
+   "last_date": "2026-11-12"
   },
   "cboe/SKEW": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:13+00:00",
-   "rows": 9268,
-   "last_date": "2026-11-11"
+   "fetched_at": "2026-11-13T11:15:50+00:00",
+   "rows": 9269,
+   "last_date": "2026-11-12"
   },
   "misc/qqq_holdings": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:19:14+00:00",
+   "fetched_at": "2026-11-13T11:15:51+00:00",
    "error": "RuntimeError: weight/ticker columns not found; response starts: <!-- * This file is created specifically to update * lang attribute in html tag and * data-language attribute body tag * based on the country and language * in "
   },
   "breadth/spx": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:43+00:00",
+   "fetched_at": "2026-11-13T11:16:15+00:00",
    "symbols": 503,
    "with_data": 503,
-   "rows": 510,
-   "last_date": "2026-11-11"
+   "rows": 511,
+   "last_date": "2026-11-12"
   },
   "breadth/ndx": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:51+00:00",
+   "fetched_at": "2026-11-13T11:16:20+00:00",
    "symbols": 101,
    "with_data": 101,
-   "rows": 510,
-   "last_date": "2026-11-11"
+   "rows": 511,
+   "last_date": "2026-11-12"
   },
   "misc/aaa_gas": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:51+00:00",
-   "rows": 14,
-   "regular": 3.9081
+   "fetched_at": "2026-11-13T11:16:20+00:00",
+   "rows": 15,
+   "regular": 3.8724
   },
   "misc/gdpnow": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:19:52+00:00",
+   "fetched_at": "2026-11-13T11:16:22+00:00",
    "error": "RuntimeError: estimate not found; html near 'estimate': ontent=\"GDPNow forecasting model provides a &quot;nowcast&quot; of the official estimate prior to its release by estimating GDP growth using a methodology similar to the one used by the US Bureau of Economic Analysis.\" /> <meta name=\"t || ontent=\"GDPNow forecasting model provides a &quot;nowcast&quot; of the official estimate prior to its release by estimating GDP growth using a methodology simila"
   },
   "misc/cleveland_nowcast": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:19:53+00:00",
+   "fetched_at": "2026-11-13T11:16:23+00:00",
    "rows": 16,
    "tables": 3
   },
   "misc/ism": {
    "status": "failed",
-   "fetched_at": "2026-11-12T11:20:02+00:00",
+   "fetched_at": "2026-11-13T11:16:32+00:00",
    "error": "RuntimeError: no PMI number parsed; text near first 'PMI':  grecaptcha.ready(function() { grecaptcha.execute('6Lf3-A0aAAAAAP72ObXbJOz6cPF-VD6GwP6Zw-oP', {action: 'captcha_resp'}).then(function(token) { document.getElementById('rtoken').value = token; document.captcha_form.submit(); }); }); "
   },
   "misc/cboe_putcall": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:20:04+00:00",
-   "rows": 14,
-   "equity_pc": 0.59
+   "fetched_at": "2026-11-13T11:16:36+00:00",
+   "rows": 15,
+   "equity_pc": 0.72
   },
   "misc/sp500_pe": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:20:04+00:00",
+   "fetched_at": "2026-11-13T11:16:37+00:00",
    "rows": 1872,
-   "last_date": "2026-11-11",
-   "last_value": 26.0
+   "last_date": "2026-11-12",
+   "last_value": 25.91
   },
   "misc/shiller_cape": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:20:04+00:00",
+   "fetched_at": "2026-11-13T11:16:37+00:00",
    "rows": 1871,
-   "last_date": "2026-11-11",
-   "last_value": 40.24
+   "last_date": "2026-11-12",
+   "last_value": 40.09
   },
   "misc/calendar": {
    "status": "ok",
-   "fetched_at": "2026-11-12T11:20:09+00:00",
+   "fetched_at": "2026-11-13T11:16:42+00:00",
    "fomc": 56,
    "cpi": 14,
    "nfp": 14,
