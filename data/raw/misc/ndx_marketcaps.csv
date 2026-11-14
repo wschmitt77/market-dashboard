@@ -1,102 +1,102 @@
 date,ticker,name,market_cap
-2026-11-13,AAPL,Apple Inc. Common Stock,5157180748160.0
-2026-11-13,NVDA,NVIDIA Corporation Common Stock,4005179000000.0
-2026-11-13,MSFT,Microsoft Corporation Common Stock,3883899750696.0
-2026-11-13,GOOGL,Alphabet Inc. Class A Common Stock,3672217800000.0
-2026-11-13,GOOG,Alphabet Inc. Class C Capital Stock,3631032900000.0
-2026-11-13,AMZN,"Amazon.com, Inc. Common Stock",2891865708557.0
-2026-11-13,SPCX,Space Exploration Technologies Corp. Class A Common Stock,1900534055437.0
-2026-11-13,AVGO,Broadcom Inc. Common Stock,1739319777611.0
-2026-11-13,META,"Meta Platforms, Inc. Class A Common Stock",1594097607783.0
-2026-11-13,TSLA,"Tesla, Inc. Common Stock",1571023645638.0
-2026-11-13,WMT,Walmart Inc. Common Stock,1001159438152.0
-2026-11-13,AMD,"Advanced Micro Devices, Inc. Common Stock",959943068010.0
-2026-11-13,MU,"Micron Technology, Inc. Common Stock",903373549389.0
-2026-11-13,ASML,ASML Holding N.V. New York Registry Shares,577016494625.0
-2026-11-13,COST,Costco Wholesale Corporation Common Stock,483990306271.0
-2026-11-13,PLTR,Palantir Technologies Inc. Class A Common Stock,413421576589.0
-2026-11-13,CSCO,"Cisco Systems, Inc. Common Stock (DE)",402183286915.0
-2026-11-13,INTC,Intel Corporation Common Stock,325278000000.0
-2026-11-13,AMAT,"Applied Materials, Inc. Common Stock",302320945911.0
-2026-11-13,LRCX,Lam Research Corporation Common Stock,292031196380.0
-2026-11-13,TXN,Texas Instruments Incorporated Common Stock,285534948344.0
-2026-11-13,PANW,"Palo Alto Networks, Inc. Common Stock",264078854518.0
-2026-11-13,NFLX,"Netflix, Inc. Common Stock",257425570859.0
-2026-11-13,AMGN,Amgen Inc. Common Stock,252638120519.0
-2026-11-13,LIN,Linde plc Ordinary Shares,239866683690.0
-2026-11-13,CRWD,"CrowdStrike Holdings, Inc. Class A Common Stock",235371902131.0
-2026-11-13,ARM,Arm Holdings plc American Depositary Shares,212576958245.0
-2026-11-13,GILD,"Gilead Sciences, Inc. Common Stock",208314870221.0
-2026-11-13,KLAC,KLA Corporation Common Stock,204955991026.0
-2026-11-13,ADI,"Analog Devices, Inc. Common Stock",198327799170.0
-2026-11-13,PEP,"PepsiCo, Inc. Common Stock",193863547748.0
-2026-11-13,QCOM,QUALCOMM Incorporated Common Stock,189539800000.0
-2026-11-13,SHOP,Shopify Inc. Class A Subordinate Voting Shares,188835701068.0
-2026-11-13,TMUS,"T-Mobile US, Inc. Common Stock",181167387818.0
-2026-11-13,ISRG,"Intuitive Surgical, Inc. Common Stock",152485105111.0
-2026-11-13,MRVL,"Marvell Technology, Inc. Common Stock",144206205000.0
-2026-11-13,VRTX,Vertex Pharmaceuticals Incorporated Common Stock,137574612666.0
-2026-11-13,SNDK,Sandisk Corporation Common Stock,133390588113.0
-2026-11-13,APP,Applovin Corporation Class A Common Stock,130434844960.0
-2026-11-13,STX,Seagate Technology Holdings PLC Ordinary Shares (Ireland),125142942960.0
-2026-11-13,SBUX,Starbucks Corporation Common Stock,122276400000.0
-2026-11-13,ADP,"Automatic Data Processing, Inc. Common Stock",121554324301.0
-2026-11-13,BKNG,Booking Holdings Inc. Common Stock,119884642628.0
-2026-11-13,WDC,Western Digital Corporation Common Stock,116493144545.0
-2026-11-13,PDD,PDD Holdings Inc. American Depositary Shares,110355927699.0
-2026-11-13,MAR,Marriott International Class A Common Stock,109351817230.0
-2026-11-13,ABNB,"Airbnb, Inc. Class A Common Stock",106421518143.0
-2026-11-13,CEG,Constellation Energy Corporation Common Stock ,99294241530.0
-2026-11-13,REGN,"Regeneron Pharmaceuticals, Inc. Common Stock",98398569002.0
-2026-11-13,CSX,CSX Corporation Common Stock,96594066204.0
-2026-11-13,FTNT,"Fortinet, Inc. Common Stock",95174299849.0
-2026-11-13,MRNA,"Moderna, Inc. Common Stock",93609062566.0
-2026-11-13,ADBE,Adobe Inc. Common Stock,92839768000.0
-2026-11-13,CDNS,"Cadence Design Systems, Inc. Common Stock",91456008280.0
-2026-11-13,INTU,Intuit Inc. Common Stock,90905670120.0
-2026-11-13,CTAS,Cintas Corporation Common Stock,90342525159.0
-2026-11-13,MNST,Monster Beverage Corporation,89203818286.0
-2026-11-13,SNPS,"Synopsys, Inc. Common Stock",88668359738.0
-2026-11-13,CMCSA,Comcast Corporation Class A Common Stock,88064957108.0
-2026-11-13,MDLZ,"Mondelez International, Inc. Class A Common Stock",84254202506.0
-2026-11-13,ROST,"Ross Stores, Inc. Common Stock",75787055816.0
-2026-11-13,DASH,"DoorDash, Inc. Class A Common Stock",75240795204.0
-2026-11-13,MELI,"MercadoLibre, Inc. Common Stock",74782345662.0
-2026-11-13,ORLY,"O'Reilly Automotive, Inc. Common Stock",73435581993.0
-2026-11-13,HON,Honeywell International Inc. Common Stock,70913760847.0
-2026-11-13,MPWR,"Monolithic Power Systems, Inc. Common Stock",70586803200.0
-2026-11-13,AEP,"American Electric Power Company, Inc. Common Stock",70194889200.0
-2026-11-13,NXPI,NXP Semiconductors N.V. Common Stock,67371243163.0
-2026-11-13,DDOG,"Datadog, Inc. Class A Common Stock",66597907851.0
-2026-11-13,FAST,Fastenal Company Common Stock,63732597658.0
-2026-11-13,LITE,Lumentum Holdings Inc. Common Stock,56655755000.0
-2026-11-13,PCAR,PACCAR Inc. Common Stock,55983311633.0
-2026-11-13,IDXX,"IDEXX Laboratories, Inc. Common Stock",54994388695.0
-2026-11-13,ADSK,"Autodesk, Inc. Common Stock",54231320000.0
-2026-11-13,CCEP,Coca-Cola Europacific Partners plc Ordinary Shares,53084165891.0
-2026-11-13,HONA,Honeywell Aerospace Inc. Common Stock ,52700202098.0
-2026-11-13,XEL,Xcel Energy Inc. Common Stock,52312767512.0
-2026-11-13,FANG,"Diamondback Energy, Inc. Common Stock",50864380630.0
-2026-11-13,BKR,Baker Hughes Company Class A Common Stock,48521814191.0
-2026-11-13,PYPL,"PayPal Holdings, Inc. Common Stock",48427378773.0
-2026-11-13,MSTR,Strategy Inc Common Stock Class A,48321590587.0
-2026-11-13,KDP,Keurig Dr Pepper Inc. Common Stock,48204790557.0
-2026-11-13,TRI,Thomson Reuters Corporation Common Shares,47355381001.0
-2026-11-13,ROP,"Roper Technologies, Inc. Common Stock",47326538326.0
-2026-11-13,EXC,Exelon Corporation Common Stock,47222335782.0
-2026-11-13,WDAY,"Workday, Inc. Class A Common Stock",45944240000.0
-2026-11-13,FER,Ferrovial N.V. Ordinary Shares,44005633401.0
-2026-11-13,TTWO,"Take-Two Interactive Software, Inc. Common Stock",42488101102.0
-2026-11-13,TER,"Teradyne, Inc. Common Stock",41177903076.0
-2026-11-13,PAYX,"Paychex, Inc. Common Stock",41001830880.0
-2026-11-13,RKLB,Rocket Lab Corporation Common Stock,40493580024.0
-2026-11-13,ALAB,"Astera Labs, Inc. Common Stock",39813608864.0
-2026-11-13,GEHC,GE HealthCare Technologies Inc. Common Stock ,37002960089.0
-2026-11-13,ODFL,"Old Dominion Freight Line, Inc. Common Stock",35368806831.0
-2026-11-13,NBIS,Nebius Group N.V. Class A Ordinary Shares,34971455244.0
-2026-11-13,MCHP,Microchip Technology Incorporated Common Stock,33785402764.0
-2026-11-13,CRWV,"CoreWeave, Inc. Class A Common Stock",31216971673.0
-2026-11-13,DXCM,"DexCom, Inc. Common Stock",30354475542.0
-2026-11-13,CPRT,"Copart, Inc. (DE) Common Stock",29639464622.0
-2026-11-13,AXON,"Axon Enterprise, Inc. Common Stock",25008800182.0
-2026-11-13,ALNY,"Alnylam Pharmaceuticals, Inc. Common Stock",20981321280.0
+2026-11-14,AAPL,Apple Inc. Common Stock,5177380481140.0
+2026-11-14,NVDA,NVIDIA Corporation Common Stock,3924685000000.0
+2026-11-14,MSFT,Microsoft Corporation Common Stock,3890434801902.0
+2026-11-14,GOOGL,Alphabet Inc. Class A Common Stock,3636196380000.0
+2026-11-14,GOOG,Alphabet Inc. Class C Capital Stock,3596240880000.0
+2026-11-14,AMZN,"Amazon.com, Inc. Common Stock",2883431460678.0
+2026-11-14,SPCX,Space Exploration Technologies Corp. Class A Common Stock,1889261772559.0
+2026-11-14,AVGO,Broadcom Inc. Common Stock,1656497299454.0
+2026-11-14,META,"Meta Platforms, Inc. Class A Common Stock",1640314449638.0
+2026-11-14,TSLA,"Tesla, Inc. Common Stock",1542445205688.0
+2026-11-14,WMT,Walmart Inc. Common Stock,1016233556010.0
+2026-11-14,MU,"Micron Technology, Inc. Common Stock",880598000132.0
+2026-11-14,AMD,"Advanced Micro Devices, Inc. Common Stock",875904997269.0
+2026-11-14,ASML,ASML Holding N.V. New York Registry Shares,576261076001.0
+2026-11-14,COST,Costco Wholesale Corporation Common Stock,490194117157.0
+2026-11-14,PLTR,Palantir Technologies Inc. Class A Common Stock,404771480657.0
+2026-11-14,CSCO,"Cisco Systems, Inc. Common Stock (DE)",377069008534.0
+2026-11-14,INTC,Intel Corporation Common Stock,317092900000.0
+2026-11-14,AMAT,"Applied Materials, Inc. Common Stock",294027852632.0
+2026-11-14,LRCX,Lam Research Corporation Common Stock,282212712320.0
+2026-11-14,TXN,Texas Instruments Incorporated Common Stock,277420667938.0
+2026-11-14,PANW,"Palo Alto Networks, Inc. Common Stock",263735108411.0
+2026-11-14,NFLX,"Netflix, Inc. Common Stock",255208154871.0
+2026-11-14,AMGN,Amgen Inc. Common Stock,251886253548.0
+2026-11-14,LIN,Linde plc Ordinary Shares,241505612781.0
+2026-11-14,CRWD,"CrowdStrike Holdings, Inc. Class A Common Stock",232033874546.0
+2026-11-14,GILD,"Gilead Sciences, Inc. Common Stock",208476114241.0
+2026-11-14,ARM,Arm Holdings plc American Depositary Shares,202734447164.0
+2026-11-14,KLAC,KLA Corporation Common Stock,198467238099.0
+2026-11-14,PEP,"PepsiCo, Inc. Common Stock",198197064420.0
+2026-11-14,ADI,"Analog Devices, Inc. Common Stock",192842518106.0
+2026-11-14,SHOP,Shopify Inc. Class A Subordinate Voting Shares,189234522892.0
+2026-11-14,QCOM,QUALCOMM Incorporated Common Stock,184542900000.0
+2026-11-14,TMUS,"T-Mobile US, Inc. Common Stock",180023373441.0
+2026-11-14,ISRG,"Intuitive Surgical, Inc. Common Stock",153767686868.0
+2026-11-14,MRVL,"Marvell Technology, Inc. Common Stock",137462844000.0
+2026-11-14,VRTX,Vertex Pharmaceuticals Incorporated Common Stock,136555391216.0
+2026-11-14,APP,Applovin Corporation Class A Common Stock,135543858019.0
+2026-11-14,SNDK,Sandisk Corporation Common Stock,125927510919.0
+2026-11-14,ADP,"Automatic Data Processing, Inc. Common Stock",122347790760.0
+2026-11-14,SBUX,Starbucks Corporation Common Stock,121352244000.0
+2026-11-14,STX,Seagate Technology Holdings PLC Ordinary Shares (Ireland),121274838274.0
+2026-11-14,BKNG,Booking Holdings Inc. Common Stock,118679846592.0
+2026-11-14,PDD,PDD Holdings Inc. American Depositary Shares,112405618604.0
+2026-11-14,WDC,Western Digital Corporation Common Stock,110668674480.0
+2026-11-14,ABNB,"Airbnb, Inc. Class A Common Stock",109741131556.0
+2026-11-14,MAR,Marriott International Class A Common Stock,108965560635.0
+2026-11-14,REGN,"Regeneron Pharmaceuticals, Inc. Common Stock",98841325839.0
+2026-11-14,CEG,Constellation Energy Corporation Common Stock ,98520702821.0
+2026-11-14,CSX,CSX Corporation Common Stock,95948876831.0
+2026-11-14,ADBE,Adobe Inc. Common Stock,94606736000.0
+2026-11-14,FTNT,"Fortinet, Inc. Common Stock",93469773250.0
+2026-11-14,INTU,Intuit Inc. Common Stock,91314541200.0
+2026-11-14,MNST,Monster Beverage Corporation,90946003896.0
+2026-11-14,MRNA,"Moderna, Inc. Common Stock",90380187186.0
+2026-11-14,CTAS,Cintas Corporation Common Stock,89834269040.0
+2026-11-14,CMCSA,Comcast Corporation Class A Common Stock,89343319389.0
+2026-11-14,CDNS,"Cadence Design Systems, Inc. Common Stock",88627160790.0
+2026-11-14,SNPS,"Synopsys, Inc. Common Stock",87233001259.0
+2026-11-14,MDLZ,"Mondelez International, Inc. Class A Common Stock",85494724118.0
+2026-11-14,MELI,"MercadoLibre, Inc. Common Stock",75613773215.0
+2026-11-14,DASH,"DoorDash, Inc. Class A Common Stock",74774300530.0
+2026-11-14,ROST,"Ross Stores, Inc. Common Stock",74010896525.0
+2026-11-14,ORLY,"O'Reilly Automotive, Inc. Common Stock",73940872695.0
+2026-11-14,HON,Honeywell International Inc. Common Stock,70599575914.0
+2026-11-14,AEP,"American Electric Power Company, Inc. Common Stock",70341911309.0
+2026-11-14,MPWR,"Monolithic Power Systems, Inc. Common Stock",67813854720.0
+2026-11-14,NXPI,NXP Semiconductors N.V. Common Stock,66816726589.0
+2026-11-14,DDOG,"Datadog, Inc. Class A Common Stock",66489595087.0
+2026-11-14,FAST,Fastenal Company Common Stock,63319569123.0
+2026-11-14,PCAR,PACCAR Inc. Common Stock,56157058391.0
+2026-11-14,IDXX,"IDEXX Laboratories, Inc. Common Stock",55483651401.0
+2026-11-14,ADSK,"Autodesk, Inc. Common Stock",55263780000.0
+2026-11-14,LITE,Lumentum Holdings Inc. Common Stock,54113434000.0
+2026-11-14,CCEP,Coca-Cola Europacific Partners plc Ordinary Shares,53828697081.0
+2026-11-14,XEL,Xcel Energy Inc. Common Stock,52383373701.0
+2026-11-14,HONA,Honeywell Aerospace Inc. Common Stock ,52313423258.0
+2026-11-14,FANG,"Diamondback Energy, Inc. Common Stock",51626508836.0
+2026-11-14,KDP,Keurig Dr Pepper Inc. Common Stock,49456863039.0
+2026-11-14,PYPL,"PayPal Holdings, Inc. Common Stock",49241423905.0
+2026-11-14,BKR,Baker Hughes Company Class A Common Stock,49097799705.0
+2026-11-14,EXC,Exelon Corporation Common Stock,47863971728.0
+2026-11-14,ROP,"Roper Technologies, Inc. Common Stock",47535010009.0
+2026-11-14,TRI,Thomson Reuters Corporation Common Shares,47377053945.0
+2026-11-14,WDAY,"Workday, Inc. Class A Common Stock",47344450000.0
+2026-11-14,MSTR,Strategy Inc Common Stock Class A,47143221233.0
+2026-11-14,FER,Ferrovial N.V. Ordinary Shares,44376154143.0
+2026-11-14,TTWO,"Take-Two Interactive Software, Inc. Common Stock",42650976836.0
+2026-11-14,PAYX,"Paychex, Inc. Common Stock",41179821117.0
+2026-11-14,TER,"Teradyne, Inc. Common Stock",38960931612.0
+2026-11-14,RKLB,Rocket Lab Corporation Common Stock,38888246900.0
+2026-11-14,ALAB,"Astera Labs, Inc. Common Stock",38771907697.0
+2026-11-14,GEHC,GE HealthCare Technologies Inc. Common Stock ,37536482730.0
+2026-11-14,ODFL,"Old Dominion Freight Line, Inc. Common Stock",35962201702.0
+2026-11-14,MCHP,Microchip Technology Incorporated Common Stock,33567713313.0
+2026-11-14,NBIS,Nebius Group N.V. Class A Ordinary Shares,31502582662.0
+2026-11-14,DXCM,"DexCom, Inc. Common Stock",31078000330.0
+2026-11-14,CRWV,"CoreWeave, Inc. Class A Common Stock",29546959716.0
+2026-11-14,CPRT,"Copart, Inc. (DE) Common Stock",29486612249.0
+2026-11-14,AXON,"Axon Enterprise, Inc. Common Stock",25686320346.0
+2026-11-14,ALNY,"Alnylam Pharmaceuticals, Inc. Common Stock",22105057543.0
