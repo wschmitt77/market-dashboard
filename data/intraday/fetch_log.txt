@@ -1,4 +1,4 @@
-[19:16:49] yfinance 1.8.0
-[19:16:51] intraday/snapshot: ok symbols=38 as_of=2026-11-05 14:15
-[19:16:51]    (intraday/snapshot took 2.0s)
-[19:16:51] intraday snapshot done
+[18:11:16] yfinance 1.8.0
+[18:11:18] intraday/snapshot: ok symbols=39 as_of=2026-11-19 13:10
+[18:11:18]    (intraday/snapshot took 1.6s)
+[18:11:18] intraday snapshot done
